@@ -1,14 +1,14 @@
 {
  "version": 1,
- "updated": "2026-10-21T16:23:51.052Z",
- "updatedBy": "Prof. Qaissaunee",
+ "updated": "2026-10-21T21:08:41.777Z",
+ "updatedBy": "Cristian",
  "progress": {
   "tasks": {},
   "custom": {},
   "sugg": {
    "s5": false
   },
-  "start": "2026-09-02"
+  "start": "2026-09-25"
  },
  "materials": {
   "items": {},
@@ -26,7 +26,10 @@
    "title": "Passive hydraulic grip assistance for EVA gloves",
    "problem": "Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. Repetitive gripping is among the most fatiguing parts of a spacewalk, and Artemis missions will ask for more EVA hours than Apollo did.",
    "approach": "A glove with rubber bands on the back stands in for a pressurized glove. A passive hydraulic system — syringes, fluid-filled tubing and tendon strings — is added to assist finger flexion without motors or electronics. Hand performance and perceived effort are compared with a bare hand, the glove with bands, and the glove with bands plus the assist.",
-   "goal": "Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand."
+   "goal": "Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand.",
+   "investigator": "Cristian Fama",
+   "advisor": "Michael Qaissaunee",
+   "school": "Brookdale Community College"
   },
   "swot": {
    "S": [
@@ -189,9 +192,181 @@
     "why": "Typos (“cold” for “could”), a duplicated sentence, and matching the parts list to the proposal."
    }
   ],
+  "glossary": [
+   {
+    "done": false,
+    "id": "g1",
+    "cat": "Hydraulic hardware",
+    "term": "Luer-lock",
+    "def": "A syringe tip with screw threads, so tubing fittings twist on and stay locked under pressure.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g2",
+    "cat": "Hydraulic hardware",
+    "term": "Luer-slip",
+    "def": "A smooth, tapered syringe tip that fittings simply push onto. Cheaper, but connections can pop off under pressure.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g3",
+    "cat": "Hydraulic hardware",
+    "term": "Barb adapter",
+    "def": "A fitting with ridges (barbs) that grip the inside of flexible tubing, used to connect tubing to a syringe tip.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g4",
+    "cat": "Hydraulic hardware",
+    "term": "3-way stopcock",
+    "def": "A small valve with three ports and a turning lever that can open, close or redirect flow between them.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g5",
+    "cat": "Hydraulic hardware",
+    "term": "Bleeding air",
+    "def": "Pushing trapped air bubbles out of a fluid line. Air squeezes, so bubbles make the system feel spongy and lose travel.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g6",
+    "cat": "Hydraulic hardware",
+    "term": "Area ratio",
+    "def": "The ratio of two plunger areas. Output force changes by this ratio, and output travel changes by its inverse.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g7",
+    "cat": "Hydraulic hardware",
+    "term": "Line pressure (psi)",
+    "def": "How hard the fluid pushes on the inside of the tubing, in pounds per square inch. The project tubing is rated to 90 psi.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g8",
+    "cat": "Hydraulic hardware",
+    "term": "Seal friction",
+    "def": "Drag from a syringe’s rubber plunger seal sliding along the barrel. It uses up some of the force before it reaches the output.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g9",
+    "cat": "Hydraulic hardware",
+    "term": "Push vs. pull mode",
+    "def": "Pushing a plunger raises fluid pressure with no hard limit. Pulling creates suction, which can never exceed about 1 atmosphere (14.7 psi) and lets dissolved air bubble out.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g10",
+    "cat": "Mechanisms",
+    "term": "Whiffletree (floating pulley)",
+    "def": "A balancing linkage that splits one pull among several strings, so each finger can stop at a different point when wrapping around an object.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g11",
+    "cat": "Mechanisms",
+    "term": "Static balancing",
+    "def": "Adding a spring or similar element that cancels another stiffness, so a joint feels close to neutral in every position.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g12",
+    "cat": "Mechanisms",
+    "term": "Hydraulic lock",
+    "def": "Closing a valve so the trapped fluid can’t move, which holds the connected parts in place without continued effort.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g13",
+    "cat": "Mechanisms",
+    "term": "Tendon (cable) drive",
+    "def": "Moving a joint by pulling a string routed along it, the way tendons move fingers. The SSRG uses this approach.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g14",
+    "cat": "Prior art",
+    "term": "Tenodesis orthosis",
+    "def": "A hand splint that uses wrist extension to close the fingers. Used by some people with spinal cord injuries to grasp objects.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g15",
+    "cat": "Prior art",
+    "term": "Spring-assisted hand orthosis",
+    "def": "A rehabilitation brace that uses springs or elastic to help fingers move, usually to help open the hand after a stroke.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g16",
+    "cat": "Prior art",
+    "term": "Body-powered prosthesis",
+    "def": "An artificial hand or hook driven by a cable connected to a harness, so a shoulder movement opens or closes it.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g17",
+    "cat": "Materials",
+    "term": "Dyneema / Spectra",
+    "def": "Brand names for an ultra-strong, very low-stretch fiber, sold as braided fishing line.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g18",
+    "cat": "Materials",
+    "term": "Kevlar thread",
+    "def": "Thread made from a very strong, heat-resistant fiber. Stretches little and resists abrasion.",
+    "slide": false
+   },
+   {
+    "done": false,
+    "id": "g19",
+    "cat": "Testing",
+    "term": "Bench test",
+    "def": "Measuring the device directly, for example the force needed to close the glove with a spring scale, instead of measuring a person’s effort.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g20",
+    "cat": "Testing",
+    "term": "Sham condition",
+    "def": "Wearing the device with everything installed but disconnected (strings slack), to separate the effect of the assist from the effect of the hardware itself.",
+    "slide": true
+   },
+   {
+    "done": false,
+    "id": "g21",
+    "cat": "Testing",
+    "term": "Perceived effort scale",
+    "def": "A 0–10 rating of how hard a task felt. Simple and quick, but subjective, so it pairs well with measured data.",
+    "slide": false
+   }
+  ],
   "taskText": {},
   "taskHidden": {},
   "phaseTitle": {},
+  "phaseWeeks": {},
+  "milestones": [],
   "pres": {
    "event": "End-of-semester presentation",
    "date": "December 2026",
