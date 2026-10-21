@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hydraulic Grip Assist — Project Tracker</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F2F4F6; --surface:#FFFFFF; --sunk:#E8ECF0; --ink:#16213A; --muted:#566074; --rule:#D3D9E1;
+  --orange:#E5531A; --orange-text:#B43C0C; --orange-soft:#FCE6DC;
+  --fluid:#1F7A8C; --fluid-soft:#DCEFF2; --good:#2E7D4F; --warn:#A35A00;
+  --body:"Barlow", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --display:"Barlow Condensed", "Arial Narrow", "Roboto Condensed", Arial, sans-serif;
+  color-scheme: light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1521; --surface:#172030; --sunk:#1E2838; --ink:#E6EAF0; --muted:#A0AABB; --rule:#2C3749;
+    --orange:#FF6A33; --orange-text:#FF916A; --orange-soft:#3A2218;
+    --fluid:#53B8C9; --fluid-soft:#16323A; --good:#5CC18A; --warn:#F0A64A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1521; --surface:#172030; --sunk:#1E2838; --ink:#E6EAF0; --muted:#A0AABB; --rule:#2C3749;
+  --orange:#FF6A33; --orange-text:#FF916A; --orange-soft:#3A2218;
+  --fluid:#53B8C9; --fluid-soft:#16323A; --good:#5CC18A; --warn:#F0A64A;
+  color-scheme: dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+a{color:var(--fluid)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--orange);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* Header */
+header.top{padding:28px 0 0}
+.title-row{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,5vw,3.1rem);line-height:1.02;margin:0;letter-spacing:.005em;max-width:16ch}
+.byline{color:var(--muted);margin:10px 0 0;font-size:.95rem}
+.sync{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:8px;white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot.shared{background:var(--good)} .dot.local{background:var(--warn)} .dot.err{background:var(--orange)}
+
+/* Week strip — the signature element */
+.strip{margin:26px 0 0;position:relative}
+.strip-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.weeknum{font-family:var(--display);font-weight:700;font-size:1.6rem;line-height:1}
+.weeknum span{color:var(--muted);font-weight:600;font-size:1rem;margin-left:6px}
+.phase-now{color:var(--muted);font-size:.92rem;text-align:right}
+.track{position:relative;height:46px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.seg{position:absolute;top:0;bottom:0;border-right:1px solid var(--paper);display:flex;align-items:flex-end;padding:0 4px 4px;font-size:.7rem;color:var(--muted);overflow:hidden;white-space:nowrap}
+.seg .fill{position:absolute;left:0;top:0;bottom:0;background:var(--fluid-soft)}
+.seg .lbl{position:relative}
+.tick{position:absolute;top:0;bottom:0;width:3px;background:var(--orange);margin-left:-1px}
+.tick::after{content:"";position:absolute;top:-1px;left:-4px;border:5px solid transparent;border-top-color:var(--orange)}
+.weekscale{display:flex;justify-content:space-between;font-size:.72rem;color:var(--muted);margin-top:4px}
+
+/* Tabs */
+nav.tabs{display:flex;gap:2px;margin:24px 0 0;border-bottom:1px solid var(--rule);overflow-x:auto;scrollbar-width:thin}
+nav.tabs button{background:none;border:0;padding:10px 14px;cursor:pointer;color:var(--muted);font-weight:500;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-1px}
+nav.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--orange)}
+nav.tabs button:hover{color:var(--ink)}
+
+main{padding:26px 0 60px}
+h2{font-family:var(--display);font-weight:700;font-size:1.7rem;margin:0 0 6px;line-height:1.1}
+h3{font-family:var(--display);font-weight:600;font-size:1.25rem;margin:0 0 8px;line-height:1.15}
+p{margin:0 0 12px;max-width:72ch}
+.lede{color:var(--muted);max-width:68ch;margin-bottom:22px}
+.grid{display:grid;gap:18px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.panel{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:18px 20px}
+.panel.flat{background:transparent;border-style:dashed}
+.stat .v{font-family:var(--display);font-weight:700;font-size:2rem;line-height:1}
+.stat .k{color:var(--muted);font-size:.88rem;margin-top:4px}
+.section{margin-top:30px}
+.muted{color:var(--muted)}
+.small{font-size:.88rem}
+
+/* Checklists */
+.check{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px solid var(--rule)}
+.check:first-of-type{border-top:0}
+.check input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--fluid);flex:none}
+.check label{flex:1;cursor:pointer}
+.check.done label{color:var(--muted);text-decoration:line-through;text-decoration-color:var(--rule)}
+.check .why{display:block;font-size:.88rem;color:var(--muted);text-decoration:none}
+.xbtn{background:none;border:0;color:var(--muted);cursor:pointer;font-size:.85rem;padding:2px 6px}
+.xbtn:hover{color:var(--orange-text)}
+
+/* Phases */
+.phase{display:grid;grid-template-columns:110px 1fr;gap:16px;padding:18px 0;border-top:1px solid var(--rule)}
+.phase:first-child{border-top:0}
+.phase .wk{font-family:var(--display);font-weight:700;font-size:1.15rem;line-height:1.1}
+.phase .wk small{display:block;font-family:var(--body);font-weight:500;font-size:.8rem;color:var(--muted);margin-top:4px}
+.badge{display:inline-block;font-size:.75rem;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--sunk);color:var(--muted);margin-left:8px;vertical-align:middle}
+.badge.now{background:var(--orange-soft);color:var(--orange-text)}
+.badge.done{background:var(--fluid-soft);color:var(--fluid)}
+.addrow{display:flex;gap:8px;margin-top:8px}
+.addrow input{flex:1;min-width:0}
+@media (max-width:620px){.phase{grid-template-columns:1fr;gap:6px}}
+
+/* Forms */
+input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:7px 9px;width:100%}
+textarea{min-height:80px;resize:vertical}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:4px;padding:8px 14px;cursor:pointer;font-weight:600;white-space:nowrap}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.form{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));align-items:end}
+.form label{font-size:.82rem;color:var(--muted);display:block}
+.form .wide{grid-column:1/-1}
+
+/* Tables */
+.tablewrap{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:.82rem;background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;white-space:nowrap}
+td input,td select{min-width:90px}
+.added{font-size:.75rem;color:var(--orange-text);font-weight:600}
+tfoot td{font-weight:600;background:var(--sunk)}
+
+/* SWOT */
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--rule);border-radius:6px;overflow:hidden;background:var(--surface)}
+.swot>div{padding:18px 20px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.swot>div:nth-child(2n){border-right:0}
+.swot>div:nth-child(n+3){border-bottom:0}
+.swot h3{display:flex;align-items:center;gap:10px}
+.swot h3 .letter{font-size:1.9rem;line-height:1;color:var(--fluid)}
+.swot .neg h3 .letter{color:var(--orange-text)}
+.swot ul{margin:0;padding-left:18px}
+.swot li{margin:0 0 8px}
+@media (max-width:700px){.swot{grid-template-columns:1fr}.swot>div{border-right:0!important;border-bottom:1px solid var(--rule)!important}.swot>div:last-child{border-bottom:0!important}}
+
+/* Calculator */
+.calc-out{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.calc-out .stat{background:var(--sunk);border-radius:4px;padding:12px}
+.calc-out .stat .v{font-size:1.5rem}
+.alert{border-left:4px solid var(--orange);background:var(--orange-soft);padding:10px 14px;border-radius:0 4px 4px 0;margin-top:12px;font-size:.93rem}
+.ok{border-left:4px solid var(--fluid);background:var(--fluid-soft);padding:10px 14px;border-radius:0 4px 4px 0;margin-top:12px;font-size:.93rem}
+svg.schem{width:100%;height:auto;max-width:720px;display:block}
+svg.schem text{font-family:var(--body);font-size:13px;fill:var(--muted)}
+
+.banner{background:var(--orange-soft);color:var(--ink);border-radius:6px;padding:10px 14px;margin-top:16px;font-size:.92rem;display:none}
+.banner.show{display:block}
+.note{border-top:1px solid var(--rule);padding:14px 0}
+.note .meta{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:10px}
+.note .body{white-space:pre-wrap;margin-top:4px}
+.refs li{margin-bottom:8px;font-size:.92rem}
+.bar{height:14px;background:var(--fluid);border-radius:2px}
+.barrow{display:grid;grid-template-columns:170px 1fr 70px;gap:10px;align-items:center;font-size:.9rem;margin:6px 0}
+@media (max-width:520px){.barrow{grid-template-columns:110px 1fr 56px}}
+.gate{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gate[hidden],#app[hidden]{display:none}
+.gate-box{max-width:520px;width:100%;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:26px 28px}
+.stack{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.stack label{font-size:.85rem;color:var(--muted)}
+.stack label.inline{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:.92rem;margin:4px 0}
+.stack .btn{align-self:flex-start;margin-top:6px}
+fieldset{border:1px solid var(--rule);border-radius:6px;padding:12px 14px 14px;margin:0 0 6px;display:flex;flex-direction:column;gap:6px}
+legend{font-family:var(--display);font-weight:600;font-size:1.05rem;padding:0 6px}
+.gate-msg{min-height:1.4em;margin:4px 0 0;font-size:.92rem}
+a.btn{text-decoration:none;display:inline-block}
+.sync .sep{color:var(--rule)}
+footer{color:var(--muted);font-size:.85rem;padding:20px 0 40px;border-top:1px solid var(--rule)}
+footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate" hidden><div class="gate-box" id="gatebox"></div></div>
+<div id="app" hidden>
+<div class="wrap">
+  <header class="top">
+    <div class="title-row">
+      <div>
+        <h1>Passive hydraulic grip assistance for EVA gloves</h1>
+        <p class="byline">Cristian Fama, investigator · Michael Qaissaunee, faculty advisor · September 2026 to May 2027</p>
+      </div>
+      <div class="sync" id="sync"><span class="dot" id="syncdot"></span><span id="synctext">Loading…</span><span class="sep">|</span><span id="who"></span><button class="xbtn" id="signout">Sign out</button></div>
+    </div>
+    <div class="strip" aria-label="Project timeline">
+      <div class="strip-head">
+        <div class="weeknum" id="weeknum">Week –</div>
+        <div class="phase-now" id="phasenow"></div>
+      </div>
+      <div class="track" id="track"></div>
+      <div class="weekscale"><span>Week 1</span><span>Week 11</span><span>Week 22</span><span>Week 33</span></div>
+    </div>
+    <div class="banner" id="banner"></div>
+    <nav class="tabs" role="tablist" id="tabs"></nav>
+  </header>
+  <main id="main"></main>
+  <footer>
+    <div class="row">
+      <span>Changes save to GitHub automatically. Each save is a commit, so earlier versions are in the repository history.</span>
+      <span>
+        <button class="btn ghost" id="exportBtn">Download backup</button>
+        <label class="btn ghost" style="display:inline-block">Restore backup<input type="file" id="importFile" accept="application/json,.json" hidden></label>
+      </span>
+    </div>
+  </footer>
+</div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Static project content ---------- */
+const TOTAL_WEEKS = 33;
+const PHASES = [
+  {id:"p1", s:1, e:3, title:"Gather materials and kick off", tasks:[
+    ["t1a","Order everything on the materials list"],
+    ["t1b","Meet with mentor about prototype design and objectives"],
+    ["t1c","Start using this tracker"]]},
+  {id:"p2", s:3, e:7, title:"Research gloves, hydraulics and grip-assist systems", tasks:[
+    ["t2a","Re-read Madden et al. (SSRG study) and note what helped and what didn’t"],
+    ["t2b","Look at passive devices from rehab: tenodesis orthoses, spring-assisted hand orthoses, body-powered prosthetics"],
+    ["t2c","Write one paragraph: where does the assist energy come from, and when is it delivered?"],
+    ["t2d","Sketch how the strings route along the glove"]]},
+  {id:"p3", s:7, e:10, title:"Preliminary component testing", tasks:[
+    ["t3a","Push vs. pull demo: pull a sealed water-filled syringe and watch for bubbles"],
+    ["t3b","Measure how far a string at each finger travels from open hand to fist"],
+    ["t3c","Try a few syringe pairs and check force and travel against the calculator"],
+    ["t3d","Squeeze-test every connection for leaks"]]},
+  {id:"p4", s:10, e:13, title:"Initial prototype design", tasks:[
+    ["t4a","Pick syringe sizes from measured string travel"],
+    ["t4b","Decide where syringes mount (forearm cuff with the webbing kit)"],
+    ["t4c","Plan a one-finger version first"]]},
+  {id:"p5", s:13, e:16, title:"Construct the initial prototype", tasks:[
+    ["t5a","Working one-finger assist (target: early December)"],
+    ["t5b","Attach the rubber bands to the back of the glove"],
+    ["t5c","Fill and bleed air from the lines"]]},
+  {id:"p6", s:16, e:21, title:"Preliminary prototype testing and changes", tasks:[
+    ["t6a","First bench test: force to close the glove with and without assist"],
+    ["t6b","Fix leaks, slipping strings, or weak spots"],
+    ["t6c","Extend to more fingers if one finger works"]]},
+  {id:"p7", s:21, e:26, title:"Refine and set up the test procedure", tasks:[
+    ["t7a","Calibrate the bands so the glove cuts grip to roughly 50–60% of bare-hand"],
+    ["t7b","Write the test procedure (tasks, rest times, number of trials)"],
+    ["t7c","Finalize the three conditions (optional fourth: hardware on, strings slack)"],
+    ["t7d","Pick the resistance level for the repetition task"]]},
+  {id:"p8", s:26, e:29, title:"Run trials and collect data", tasks:[
+    ["t8a","Test on several different days"],
+    ["t8b","Change the order of conditions between days"],
+    ["t8c","Log every trial on the Testing tab"]]},
+  {id:"p9", s:29, e:31, title:"Analyze and compare results", tasks:[
+    ["t9a","Compare averages across conditions"],
+    ["t9b","Re-test anything that looks off"]]},
+  {id:"p10", s:31, e:33, title:"Conclusions and final report", tasks:[
+    ["t10a","Write up conclusions and limitations (note: single test subject)"],
+    ["t10b","List future improvements, including issues a real suit would raise"],
+    ["t10c","Finish the final report and presentation"]]}
+];
+
+const MATERIALS = [
+  {id:"m1", name:"Mechanix Original gloves, Large, ×2", cat:"Glove", link:"https://www.amazon.com/dp/B0019IA18S", planned:47.98, note:"Proposal budgeted $25 for one; two identical gloves let one stay unmodified."},
+  {id:"m2", name:"Syringe assortment, 1/3/5/10 mL (20 pack)", cat:"Hydraulics", link:"https://www.amazon.com/dp/B08QFGYYPH", planned:7.99, note:"Looks like Luer-slip tips, which can pop off under pressure."},
+  {id:"m3", name:"PVC tubing, 1/8 in ID × 1/4 in OD, 25 ft", cat:"Hydraulics", link:"https://www.amazon.com/dp/B0D2CR3322", planned:9.99, note:"Rated to 90 psi."},
+  {id:"m4", name:"Metal jump rings, assorted", cat:"Glove", link:"https://www.amazon.com/dp/B0FVX8753P", planned:7.98, note:"Open rings can pry apart and fray string. Sewn loops or short tubing guides may work better."},
+  {id:"m5", name:"Rubber bands, assorted (#16, 19, 33, 64)", cat:"Resistance", link:"https://www.amazon.com/dp/B0DJXW6N7C", planned:6.99, note:"Measure their force with a scale; replace on a schedule."},
+  {id:"m6", name:"1 in buckles and nylon webbing kit", cat:"Mounting", link:"https://www.amazon.com/dp/B08LD8CJ8D", planned:9.99, note:"Good for a forearm cuff to hold the syringes."},
+  {id:"m7", name:"KYTO digital hand dynamometer", cat:"Testing", link:"https://www.amazon.com/dp/B0D2VL5P95", planned:21.55, note:"Keep it away from water."},
+  {id:"m8", name:"Low-stretch string: braided fishing line (Dyneema/Spectra) or Kevlar thread", cat:"Glove", link:"", planned:10, note:"In the proposal but not on the parts list.", rec:true},
+  {id:"m9", name:"Adjustable hand gripper (standardized resistance)", cat:"Testing", link:"", planned:12, note:"In the proposal but not on the parts list.", rec:true},
+  {id:"m10", name:"Luer-lock syringes, 10 mL and 20 mL (60 mL optional)", cat:"Hydraulics", link:"", planned:12, note:"Screw-on tips that won’t pop off.", rec:true},
+  {id:"m11", name:"Luer-to-barb adapters for 1/8 in ID tubing", cat:"Hydraulics", link:"", planned:8, note:"", rec:true},
+  {id:"m12", name:"3-way Luer stopcocks", cat:"Hydraulics", link:"", planned:8, note:"For bleeding air, and to try as a grip lock.", rec:true},
+  {id:"m13", name:"Small zip ties or mini hose clamps", cat:"Hydraulics", link:"", planned:6, note:"", rec:true},
+  {id:"m14", name:"Luggage scale or spring scale", cat:"Testing", link:"", planned:12, note:"For bench tests and band calibration.", rec:true},
+  {id:"m15", name:"Food coloring", cat:"Hydraulics", link:"", planned:3, note:"Makes bubbles and leaks easy to see.", rec:true},
+  {id:"m16", name:"Safety glasses", cat:"Testing", link:"", planned:8, note:"Bands and fittings under tension can snap.", rec:true}
+];
+const STATUSES = ["Needed","Ordered","Received","Not needed"];
+
+const SUGGESTIONS = [
+  {id:"s1", top:true, text:"Decide where the assist energy comes from", why:"A passive system can only redirect or store energy. If extending the same hand drives the input, it pulls the fingers closed at the same moment you’re opening them."},
+  {id:"s2", top:true, text:"Push the syringes, never pull them", why:"Suction tops out around 1 atmosphere and air comes out of solution. Mount the output so a pushing plunger pulls the string."},
+  {id:"s3", top:true, text:"Use Luer-lock syringes, barb adapters and clamps", why:"Otherwise most of the time goes to chasing leaks."},
+  {id:"s4", top:true, text:"Build something crude this semester", why:"A one-finger rig before winter break leaves spring for improving it."},
+  {id:"s5", text:"Start with one finger", why:"Later, a floating pulley (whiffletree) lets several fingers close around odd shapes."},
+  {id:"s6", text:"Replace open jump rings with sewn loops or tubing guides", why:"Anchor each string firmly at the fingertip."},
+  {id:"s7", text:"Use low-stretch string", why:"Stretch in the string eats up assist travel."},
+  {id:"s8", text:"Calibrate the bands with a scale", why:"Aim for grip with the glove at about 50–60% of bare-hand, close to NASA’s pressurized-glove numbers."},
+  {id:"s9", text:"Do a simple bench test", why:"Force to close the glove at a few positions, assist on vs. off."},
+  {id:"s10", text:"Test over several days and vary the order", why:"Note in the write-up that he is the only test subject."},
+  {id:"s11", text:"Try a stopcock as a grip lock", why:"Close the valve and the fluid holds the grip — a passive version of the SSRG’s hold mode."},
+  {id:"s12", text:"Check extension effort too", why:"The SSRG made opening the hand harder; worth knowing if this design does the same."},
+  {id:"s13", text:"Clean up the proposal", why:"Typos (“cold” for “could”), a duplicated sentence, and matching the parts list to the proposal."}
+];
+
+const SWOT = {
+  S:["Problem is well motivated with NASA sources, including 2026 Artemis workload research.",
+     "Clear grasp of the SSRG and a real niche: a simpler, unpowered alternative.",
+     "Three-condition design mirrors the Madden et al. study, so results are easy to compare.",
+     "Cheap, available parts make quick iteration easy; spending is well under budget.",
+     "Already names leaks, air and weak force as risks."],
+  W:["The energy source and timing of the assist aren’t defined yet.",
+     "Pulling on syringes caps force and invites bubbles.",
+     "No hypothesis or target to call it a success.",
+     "Rubber band resistance isn’t measured or standardized.",
+     "Parts list is missing string, the grip device and fittings; glove cost is off.",
+     "Building doesn’t start until late fall, close to winter break."],
+  O:["Aim to cancel the glove’s stiffness (static balancing) instead of overpowering it.",
+     "A stopcock in the line gives a passive grip lock for holding tasks.",
+     "Rehab devices (tenodesis orthoses, body-powered prosthetics) offer tested passive ideas.",
+     "Tune the bands to NASA’s published grip-strength figures.",
+     "Bench tests give clean data independent of how hard he squeezes."],
+  T:["The measurable effect may be small; a clear null result is still a valid outcome.",
+     "Always-on assist could make opening the hand harder.",
+     "Leaks and air can make results vary between sessions.",
+     "Schedule slip could squeeze the testing window."]
+};
+
+const CONDITIONS = [
+  {id:"A", name:"Bare hand"},
+  {id:"B", name:"Glove + bands"},
+  {id:"C", name:"Glove + bands + assist"},
+  {id:"D", name:"Glove + bands, assist slack (optional)"}
+];
+
+const REFS = [
+  "Brief, J., ed. “4.0 Physical Characteristics and Capabilities.” NASA, 2026.",
+  "Estep, P., et al. “Characterization of Physical and Cognitive Workloads Associated with Frequent Exploration Surface EVAs (Hi-Tempo EVA).” NTRS 20260000071, 2026.",
+  "Madden, K. E., et al. “The Influence of Robotic Assistance on Reducing Neuromuscular Effort and Fatigue during EVA Glove Use.” NTRS 20170002225, 2017.",
+  "McFarland, S. M., et al. “Spacesuit Glove-Induced Hand Trauma and Analysis of Potentially Related Risk Variables.” NTRS 20140016931, 2015.",
+  "Mesloh, M., et al. “The Effects of EVA Glove Pressure on Hand Strength.” NTRS 20100008464, 2010.",
+  "“Space Suit RoboGlove (SSRG).” NASA Technology Transfer Program, MSC-TOPS-80.",
+  "Thompson, R. L., et al. “Investigation of Hardware and Instrumentation to Measure Hand Grasp Activity with the Spacesuit Gloves.” NTRS 20240001865, 2024.",
+  "Walsh, S. K. “Next Generation Life Support: High Performance EVA Glove.” NTRS 20150014484, 2015.",
+  "“What Does It Take to Prepare for a Spacewalk?” NASA, ed. M. A. Garcia, 2018.",
+  "“What Is a Spacewalk? (Grades K-4).” NASA, ed. S. May, 2020."
+];
+
+/* Approximate inner diameters (mm) of common syringes */
+const SYRINGES = {"1":4.78,"3":8.66,"5":12.06,"10":14.5,"20":19.13,"30":21.7,"60":26.7};
+
+/* ---------- State ---------- */
+const DOCS = ["progress","materials","logs","notes"];
+function defaults(name){
+  switch(name){
+    case "progress": return {tasks:{}, custom:{}, sugg:{}, start:"2026-09-02"};
+    case "materials": return {items:{}, custom:[]};
+    case "logs": return {trials:[], bench:[]};
+    case "notes": return {entries:[]};
+  }
+}
+const state = {};
+DOCS.forEach(d => state[d] = defaults(d));
+const readOnly = false;
+let currentTab = "overview";
+let renderPending = false;
+const calc = {inSz:"10", outSz:"3", force:20, stroke:30, need:40, push:true};
+
+const clone = o => JSON.parse(JSON.stringify(o));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "$" + (Number(n)||0).toFixed(2);
+const fmt = (n, d=1) => (Number.isFinite(n) ? n.toFixed(d) : "–");
+
+function normalize(obj){ const out = {}; DOCS.forEach(d => out[d] = Object.assign(defaults(d), (obj && obj[d]) || {})); return out; }
+function adopt(obj){ const n = normalize(obj); DOCS.forEach(d => state[d] = n[d]); }
+
+/* ---------- GitHub storage ---------- */
+const ITER = 600000;
+const SESSION_KEY = "evaTracker:session";
+let access = null;      // contents of access.json
+let token = null;       // decrypted GitHub token (memory only unless "stay signed in")
+let who = null;         // {name, role}
+let remote = normalize({}), remoteSha = null;
+let pending = [];       // edits not yet committed, as functions applied to a state object
+let saving = false, saveTimer = null, retryTimer = null, stopped = false;
+
+const te = new TextEncoder(), td = new TextDecoder();
+function bytesToB64(bytes){ let bin = ""; for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000)); return btoa(bin); }
+function b64ToBytes(b64){ const bin = atob(String(b64).replace(/\s/g,"")); const out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out; }
+const strToB64 = s => bytesToB64(te.encode(s));
+const b64ToStr = b => td.decode(b64ToBytes(b));
+
+async function deriveKey(pw, salt, iter){
+  const base = await crypto.subtle.importKey("raw", te.encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:iter, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+}
+async function encryptFor(pw, secret, iter){
+  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12));
+  const key = await deriveKey(pw, salt, iter);
+  const ct = await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, te.encode(secret));
+  return {salt:bytesToB64(salt), iv:bytesToB64(iv), ct:bytesToB64(new Uint8Array(ct))};
+}
+async function tryDecrypt(pw, u, iter){
+  try {
+    const key = await deriveKey(pw, b64ToBytes(u.salt), iter);
+    const pt = await crypto.subtle.decrypt({name:"AES-GCM", iv:b64ToBytes(u.iv)}, key, b64ToBytes(u.ct));
+    return td.decode(pt);
+  } catch(e){ return null; }
+}
+
+function httpErr(status){ const e = new Error("GitHub " + status); e.status = status; return e; }
+function gh(path, tok, opts){
+  opts = opts || {};
+  return fetch("https://api.github.com" + path, {
+    method: opts.method || "GET", cache: "no-store", body: opts.body,
+    headers: {"Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28", "Authorization":"Bearer " + tok}
+  }).catch(() => { throw httpErr(0); });
+}
+const cPath = (cfg, p) => `/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}/contents/${p.split("/").filter(Boolean).map(encodeURIComponent).join("/")}`;
+async function ghGet(cfg, p, tok){
+  const r = await gh(cPath(cfg, p) + "?ref=" + encodeURIComponent(cfg.branch), tok);
+  if (r.status === 404) return null;
+  if (!r.ok) throw httpErr(r.status);
+  const j = await r.json();
+  return {sha:j.sha, text:b64ToStr(j.content || "")};
+}
+async function ghPut(cfg, p, text, sha, message, tok){
+  const body = {message, content:strToB64(text), branch:cfg.branch};
+  if (sha) body.sha = sha;
+  const r = await gh(cPath(cfg, p), tok, {method:"PUT", body:JSON.stringify(body)});
+  if (!r.ok) throw httpErr(r.status);
+  const j = await r.json();
+  return j.content.sha;
+}
+
+async function loadRemote(){
+  const f = await ghGet(access, access.dataPath, token);
+  if (!f){ remote = normalize({}); remoteSha = null; return; }
+  let parsed = {};
+  try { parsed = JSON.parse(f.text); } catch(e){ parsed = {}; }
+  remote = normalize(parsed); remoteSha = f.sha;
+}
+
+function mutate(fn){
+  if (!token) return;
+  fn(state);
+  pending.push(fn);
+  stopped = false;
+  setSync("dirty");
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(flush, 1500);
+}
+
+async function flush(){
+  if (saving || !pending.length || stopped) return;
+  saving = true; setSync("saving");
+  const batch = pending.slice();
+  let ok = false, attempt = 0;
+  try {
+    while (true){
+      const base = clone(remote);
+      batch.forEach(f => f(base));
+      const file = Object.assign({version:1, updated:new Date().toISOString(), updatedBy:who.name}, base);
+      try {
+        remoteSha = await ghPut(access, access.dataPath, JSON.stringify(file, null, 1), remoteSha, `Tracker update by ${who.name}`, token);
+        remote = normalize(base);
+        break;
+      } catch(e){
+        if ((e.status === 409 || e.status === 422) && attempt < 3){ attempt++; await loadRemote(); continue; }
+        throw e;
+      }
+    }
+    pending = pending.slice(batch.length);
+    const view = clone(remote); pending.forEach(f => f(view)); adopt(view);
+    ok = true;
+    hideBanner();
+    setSync(pending.length ? "dirty" : "saved");
+    requestRender();
+  } catch(e){
+    handleErr(e);
+  } finally {
+    saving = false;
+    if (ok && pending.length) flush();
+  }
+}
+
+function handleErr(e){
+  const s = e && e.status;
+  setSync("error");
+  if (s === 401){
+    stopped = true;
+    showBanner("GitHub didn’t accept the access key. It may have expired. Prof. Qaissaunee can renew it by opening this page with ?setup at the end of the address.");
+  } else if (s === 404){
+    stopped = true;
+    showBanner("The repository, branch or data file couldn’t be found with this access key. Check the setup.");
+  } else if (s === 403){
+    showBanner("GitHub refused the save (permissions or too many requests). Trying again in a minute.");
+    retryLater(60000);
+  } else {
+    showBanner("Couldn’t reach GitHub. Your changes are kept on this page and will save when the connection is back.");
+    retryLater(20000);
+  }
+}
+function retryLater(ms){
+  clearTimeout(retryTimer);
+  retryTimer = setTimeout(() => { retryTimer = null; flush(); }, ms);
+}
+
+async function poll(){
+  if (!token || saving || pending.length || document.hidden) return;
+  try {
+    const f = await ghGet(access, access.dataPath, token);
+    if (f && f.sha !== remoteSha && !pending.length && !saving){
+      remoteSha = f.sha;
+      try { remote = normalize(JSON.parse(f.text)); } catch(e){ return; }
+      adopt(clone(remote));
+      requestRender();
+      setSync("saved");
+    }
+  } catch(e){}
+}
+window.addEventListener("beforeunload", e => { if (pending.length){ e.preventDefault(); e.returnValue = ""; } });
+document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
+
+function setSync(s){
+  const dot = document.getElementById("syncdot"), t = document.getElementById("synctext");
+  dot.className = "dot";
+  const map = {
+    loading:["", "Loading from GitHub…"], saved:["shared", "Saved to GitHub"], saving:["local", "Saving…"],
+    dirty:["local", "Unsaved changes"], error:["err", "Not saved"]
+  };
+  const [cls, txt] = map[s] || ["", ""];
+  if (cls) dot.classList.add(cls);
+  t.textContent = txt;
+}
+function showBanner(msg){ const b = document.getElementById("banner"); b.textContent = msg; b.classList.add("show"); }
+function hideBanner(){ document.getElementById("banner").classList.remove("show"); }
+
+/* ---------- Sign-in and setup ---------- */
+const gate = document.getElementById("gate"), gatebox = document.getElementById("gatebox"), app = document.getElementById("app");
+
+function readSession(){
+  for (const store of [sessionStorage, localStorage]){
+    try { const s = JSON.parse(store.getItem(SESSION_KEY) || "null"); if (s && s.token && s.repo === access.repo && s.owner === access.owner) return s; } catch(e){}
+  }
+  return null;
+}
+function writeSession(remember){
+  const s = JSON.stringify({token, name:who.name, role:who.role, owner:access.owner, repo:access.repo});
+  try { sessionStorage.setItem(SESSION_KEY, s); } catch(e){}
+  try { if (remember) localStorage.setItem(SESSION_KEY, s); else localStorage.removeItem(SESSION_KEY); } catch(e){}
+}
+function signOut(){
+  try { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY); } catch(e){}
+  location.reload();
+}
+
+function showGate(html){ app.hidden = true; gate.hidden = false; gatebox.innerHTML = html; }
+
+function showLogin(msg){
+  showGate(`<h2>Project tracker</h2>
+    <p class="muted">Passive hydraulic grip assistance for EVA gloves</p>
+    <form id="loginForm" class="stack">
+      <label for="pw">Password</label>
+      <input type="password" id="pw" autocomplete="current-password" required>
+      <label class="inline"><input type="checkbox" id="remember"> Stay signed in on this device</label>
+      <button class="btn" type="submit" id="loginBtn">Sign in</button>
+      <p class="gate-msg" id="loginMsg" role="status">${msg ? esc(msg) : ""}</p>
+    </form>`);
+  const pw = document.getElementById("pw"); pw.focus();
+  document.getElementById("loginForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const btn = document.getElementById("loginBtn"), m = document.getElementById("loginMsg");
+    btn.disabled = true; m.textContent = "Checking…";
+    let found = null;
+    for (const u of access.users || []){
+      const tok = await tryDecrypt(pw.value, u, access.iterations || ITER);
+      if (tok){ found = {u, tok}; break; }
+    }
+    if (!found){ btn.disabled = false; m.textContent = "That password doesn’t match."; pw.select(); return; }
+    token = found.tok; who = {name:found.u.name, role:found.u.role};
+    writeSession(document.getElementById("remember").checked);
+    start();
+  });
+}
+
+function setupDefaults(){
+  const host = location.hostname, parts = location.pathname.split("/").filter(Boolean);
+  if (parts.length && /\.html?$/i.test(parts[parts.length-1])) parts.pop();
+  let owner = "", repo = "", folder = "";
+  if (host.endsWith(".github.io")){
+    owner = host.split(".")[0];
+    if (parts.length){ repo = parts[0]; folder = parts.slice(1).join("/"); }
+    else { repo = host; }
+  }
+  return {owner, repo, folder, branch:"main"};
+}
+
+function showSetup(){
+  const d = setupDefaults();
+  showGate(`<h2>Set up the tracker</h2>
+    <p class="small muted">Run this once, and again whenever the GitHub token expires or a password changes. The token is encrypted in this browser with each password; neither the token nor the passwords are stored in plain text.</p>
+    <form id="setupForm" class="stack">
+      <fieldset><legend>Repository</legend>
+        <label for="sOwner">GitHub owner</label><input type="text" id="sOwner" value="${esc(d.owner)}" required>
+        <label for="sRepo">Repository</label><input type="text" id="sRepo" value="${esc(d.repo)}" required>
+        <label for="sBranch">Branch</label><input type="text" id="sBranch" value="${esc(d.branch)}" required>
+        <label for="sFolder">Folder this page is in (blank for the top level)</label><input type="text" id="sFolder" value="${esc(d.folder)}">
+        <label for="sToken">Fine-grained personal access token</label><input type="password" id="sToken" autocomplete="off" required>
+      </fieldset>
+      <fieldset><legend>Advisor</legend>
+        <label for="aName">Name</label><input type="text" id="aName" value="Prof. Qaissaunee" required>
+        <label for="aPw">Password (12+ characters)</label><input type="password" id="aPw" autocomplete="new-password" minlength="12" required>
+        <label for="aPw2">Confirm password</label><input type="password" id="aPw2" autocomplete="new-password" required>
+      </fieldset>
+      <fieldset><legend>Student</legend>
+        <label for="cName">Name</label><input type="text" id="cName" value="Cristian" required>
+        <label for="cPw">Password (12+ characters)</label><input type="password" id="cPw" autocomplete="new-password" minlength="12" required>
+        <label for="cPw2">Confirm password</label><input type="password" id="cPw2" autocomplete="new-password" required>
+      </fieldset>
+      <button class="btn" type="submit" id="setupBtn">Save access file to GitHub</button>
+      <p class="gate-msg" id="setupMsg" role="status"></p>
+    </form>`);
+  document.getElementById("setupForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const v = id => document.getElementById(id).value.trim();
+    const m = document.getElementById("setupMsg"), btn = document.getElementById("setupBtn");
+    const aPw = document.getElementById("aPw").value, cPw = document.getElementById("cPw").value;
+    if (aPw !== document.getElementById("aPw2").value) return m.textContent = "The advisor passwords don’t match.";
+    if (cPw !== document.getElementById("cPw2").value) return m.textContent = "The student passwords don’t match.";
+    if (aPw.length < 12 || cPw.length < 12) return m.textContent = "Use at least 12 characters for each password.";
+    if (aPw === cPw) return m.textContent = "Use a different password for each person.";
+    const folder = v("sFolder").replace(/^\/+|\/+$/g, "");
+    const cfg = {owner:v("sOwner"), repo:v("sRepo"), branch:v("sBranch") || "main"};
+    const tok = v("sToken");
+    btn.disabled = true;
+    try {
+      m.textContent = "Checking the token…";
+      const r = await gh(`/repos/${encodeURIComponent(cfg.owner)}/${encodeURIComponent(cfg.repo)}`, tok);
+      if (r.status === 401) throw new Error("GitHub didn’t accept that token.");
+      if (r.status === 404) throw new Error("Repository not found, or the token doesn’t include it.");
+      if (!r.ok) throw new Error("GitHub returned an error (" + r.status + ").");
+      m.textContent = "Encrypting the token for each password…";
+      const users = [
+        Object.assign({name:v("aName") || "Advisor", role:"advisor"}, await encryptFor(aPw, tok, ITER)),
+        Object.assign({name:v("cName") || "Student", role:"student"}, await encryptFor(cPw, tok, ITER))
+      ];
+      const dataPath = (folder ? folder + "/" : "") + "data.json";
+      const accessPath = (folder ? folder + "/" : "") + "access.json";
+      const obj = Object.assign({version:1}, cfg, {dataPath, iterations:ITER, users, created:new Date().toISOString()});
+      m.textContent = "Saving access.json…";
+      const existing = await ghGet(cfg, accessPath, tok);
+      await ghPut(cfg, accessPath, JSON.stringify(obj, null, 2), existing && existing.sha, "Set up tracker access", tok);
+      const data = await ghGet(cfg, dataPath, tok);
+      if (!data){
+        m.textContent = "Creating data.json…";
+        await ghPut(cfg, dataPath, JSON.stringify(Object.assign({version:1}, normalize({})), null, 1), null, "Create tracker data file", tok);
+      }
+      access = obj; token = tok; who = {name:users[0].name, role:"advisor"};
+      writeSession(false);
+      try { history.replaceState(null, "", location.pathname + location.hash); } catch(_){}
+      await start();
+      showBanner("Setup saved. GitHub Pages can take a minute or two to publish access.json before the passwords work on other devices.");
+    } catch(err){
+      btn.disabled = false;
+      m.textContent = err.status === 0 ? "Couldn’t reach GitHub." : (err.message || "Setup failed.");
+    }
+  });
+}
+
+async function start(){
+  gate.hidden = true; app.hidden = false;
+  document.getElementById("who").textContent = who.name;
+  setSync("loading"); render();
+  try {
+    await loadRemote();
+    adopt(clone(remote));
+    setSync("saved"); render();
+    if (!start.polling){ start.polling = setInterval(poll, 45000); }
+  } catch(e){
+    if (e.status === 401){
+      try { sessionStorage.removeItem(SESSION_KEY); localStorage.removeItem(SESSION_KEY); } catch(_){}
+      token = null; who = null;
+      showLogin("The saved access key no longer works. It may have expired — ask Prof. Qaissaunee to rerun setup.");
+    } else handleErr(e);
+  }
+}
+
+async function boot(){
+  if (new URLSearchParams(location.search).has("setup")) return showSetup();
+  try {
+    const r = await fetch(new URL("access.json", location.href), {cache:"no-store"});
+    if (r.ok) access = await r.json();
+  } catch(e){}
+  if (!access || !Array.isArray(access.users)){
+    return showGate(`<h2>Not set up yet</h2><p>This tracker needs a one-time setup before anyone can sign in.</p><p><a class="btn" href="?setup">Start setup</a></p><p class="small muted">If setup was just completed, wait a minute or two for GitHub Pages to publish, then reload.</p>`);
+  }
+  const s = readSession();
+  if (s){ token = s.token; who = {name:s.name, role:s.role}; return start(); }
+  showLogin();
+}
+/* ---------- Derived values ---------- */
+function currentWeek(){
+  const start = new Date((state.progress.start || "2026-09-02") + "T00:00:00");
+  if (isNaN(start)) return 1;
+  const now = new Date();
+  return Math.floor((now - start) / (7*86400000)) + 1;
+}
+function phaseTasks(p){
+  const custom = (state.progress.custom[p.id] || []).map(c => [c.id, c.text, true]);
+  return p.tasks.map(t => [t[0], t[1], false]).concat(custom);
+}
+function phaseDone(p){
+  const ts = phaseTasks(p);
+  return [ts.filter(t => state.progress.tasks[t[0]]).length, ts.length];
+}
+function phaseStatus(p, wk){
+  const [d,n] = phaseDone(p);
+  if (n && d === n) return "done";
+  if (wk >= p.s && wk <= p.e) return "now";
+  if (wk > p.e) return "behind";
+  return "later";
+}
+function matRow(m){
+  const o = state.materials.items[m.id] || {};
+  return {status:o.status || "Needed", actual:o.actual ?? "", note:o.note ?? m.note ?? ""};
+}
+function allMaterials(){
+  return MATERIALS.concat((state.materials.custom || []).map(c => Object.assign({custom:true, cat:"Other", note:""}, c)));
+}
+
+/* ---------- Header ---------- */
+function renderHeader(){
+  const wk = currentWeek();
+  const shown = Math.min(Math.max(wk,1), TOTAL_WEEKS);
+  document.getElementById("weeknum").innerHTML = wk < 1 ? "Not started" : (wk > TOTAL_WEEKS ? "Project complete" : `Week ${shown}<span>of ${TOTAL_WEEKS}</span>`);
+  const now = PHASES.filter(p => wk >= p.s && wk <= p.e).map(p => p.title);
+  document.getElementById("phasenow").textContent = now.length ? "Now: " + now.join(" · ") : "";
+  const track = document.getElementById("track");
+  let html = "";
+  PHASES.forEach((p, i) => {
+    const left = (p.s - 1) / TOTAL_WEEKS * 100;
+    const nextStart = PHASES[i+1] ? PHASES[i+1].s - 1 : TOTAL_WEEKS;
+    const width = (Math.max(nextStart, p.s) - (p.s - 1)) / TOTAL_WEEKS * 100;
+    const [d,n] = phaseDone(p);
+    const pct = n ? d/n*100 : 0;
+    html += `<div class="seg" style="left:${left}%;width:${width}%" title="Weeks ${p.s}–${p.e}: ${esc(p.title)} (${d}/${n} done)"><div class="fill" style="width:${pct}%"></div><span class="lbl">${i+1}</span></div>`;
+  });
+  if (wk >= 1 && wk <= TOTAL_WEEKS){
+    const pos = ((wk - 0.5) / TOTAL_WEEKS) * 100;
+    html += `<div class="tick" style="left:${pos}%" aria-label="Current week"></div>`;
+  }
+  track.innerHTML = html;
+}
+
+/* ---------- Tabs ---------- */
+const TABS = [
+  ["overview","Overview"],["timeline","Timeline"],["materials","Materials"],
+  ["design","Design math"],["testing","Testing"],["swot","SWOT and advice"],["notes","Notes"]
+];
+function renderTabs(){
+  document.getElementById("tabs").innerHTML = TABS.map(([id,label]) =>
+    `<button role="tab" data-tab="${id}" aria-selected="${id===currentTab}">${label}</button>`).join("");
+}
+
+/* ---------- Views ---------- */
+function vOverview(){
+  const wk = currentWeek();
+  let done = 0, total = 0;
+  PHASES.forEach(p => { const [d,n] = phaseDone(p); done += d; total += n; });
+  const mats = allMaterials().filter(m => matRow(m).status !== "Not needed");
+  const received = mats.filter(m => matRow(m).status === "Received").length;
+  const spent = allMaterials().reduce((s,m) => s + (Number(matRow(m).actual) || 0), 0);
+  const trials = state.logs.trials.length + state.logs.bench.length;
+  const nowPhases = PHASES.filter(p => wk >= p.s && wk <= p.e);
+  const behind = PHASES.filter(p => phaseStatus(p, wk) === "behind");
+  const open = [];
+  behind.concat(nowPhases).forEach(p => phaseTasks(p).forEach(t => { if (!state.progress.tasks[t[0]]) open.push([p, t]); }));
+  const top = SUGGESTIONS.filter(s => s.top);
+  return `
+  <div class="grid g4">
+    <div class="panel stat"><div class="v">${Math.round(total ? done/total*100 : 0)}%</div><div class="k">Tasks done (${done} of ${total})</div></div>
+    <div class="panel stat"><div class="v">${received}/${mats.length}</div><div class="k">Materials received</div></div>
+    <div class="panel stat"><div class="v">${money(spent)}</div><div class="k">Spent so far (estimate $130–200)</div></div>
+    <div class="panel stat"><div class="v">${trials}</div><div class="k">Test entries logged</div></div>
+  </div>
+
+  <div class="grid g2 section">
+    <div class="panel">
+      <h3>Up next</h3>
+      ${open.length ? open.slice(0,7).map(([p,t]) => checkRow(t[0], t[1], `Weeks ${p.s}–${p.e}${phaseStatus(p,wk)==="behind" ? " · past its window" : ""}`)).join("") : `<p class="muted">Nothing open for the current weeks. Look ahead on the Timeline tab.</p>`}
+    </div>
+    <div class="panel">
+      <h3>Four things that matter most</h3>
+      ${top.map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}
+    </div>
+  </div>
+
+  <div class="section grid g2">
+    <div>
+      <h2>The project</h2>
+      <p>Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. This project tests whether a passive hydraulic system — syringes, fluid-filled tubing and tendon strings on a glove — can reduce the effort needed to close the hand, without motors or electronics.</p>
+      <p>A glove with rubber bands on the back stands in for a pressurized glove. Hand performance and perceived effort are compared across three conditions: bare hand, the glove with bands, and the glove with bands plus the hydraulic assist.</p>
+      <p><strong>Goal:</strong> design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand.</p>
+    </div>
+    <div class="panel flat">
+      <h3>Project settings</h3>
+      <div class="form">
+        <div><label for="startDate">Week 1 starts on</label><input type="date" id="startDate" data-setting="start" value="${esc(state.progress.start)}" ${readOnly?"disabled":""}></div>
+      </div>
+      <p class="small muted" style="margin-top:10px">The week counter and the “past its window” flags use this date.</p>
+      <h3 style="margin-top:16px">Measurements planned</h3>
+      <p class="small">Maximum grip strength, repetitions against a set resistance, hold time, and perceived effort (0–10). Plus a bench test of the force needed to close the glove.</p>
+    </div>
+  </div>`;
+}
+
+function checkRow(key, text, why, removable){
+  const isSugg = key.startsWith("sugg:");
+  const id = isSugg ? key.slice(5) : key;
+  const on = isSugg ? !!state.progress.sugg[id] : !!state.progress.tasks[id];
+  const dom = "c_" + key.replace(/[^a-z0-9]/gi,"_");
+  return `<div class="check ${on?"done":""}">
+    <input type="checkbox" id="${dom}" data-toggle="${esc(key)}" ${on?"checked":""} ${readOnly?"disabled":""}>
+    <label for="${dom}">${esc(text)}${why ? `<span class="why">${esc(why)}</span>` : ""}</label>
+    ${removable && !readOnly ? `<button class="xbtn" data-remove-task="${esc(removable)}|${esc(id)}" aria-label="Remove task">Remove</button>` : ""}
+  </div>`;
+}
+
+function vTimeline(){
+  const wk = currentWeek();
+  const labels = {done:"Done", now:"This week", behind:"Past its window", later:""};
+  return `<h2>Timeline</h2>
+  <p class="lede">The proposal’s ten phases, with tasks from the proposal and the advisor’s suggestions. Add your own tasks to any phase.</p>
+  <div>${PHASES.map((p,i) => {
+    const st = phaseStatus(p, wk); const [d,n] = phaseDone(p);
+    return `<div class="phase">
+      <div class="wk">Weeks ${p.s}–${p.e}<small>Phase ${i+1} · ${d}/${n} done</small></div>
+      <div>
+        <h3>${esc(p.title)}${labels[st] ? `<span class="badge ${st==="done"?"done":(st==="later"?"":"now")}">${labels[st]}</span>` : ""}</h3>
+        ${phaseTasks(p).map(t => checkRow(t[0], t[1], "", t[2] ? p.id : null)).join("")}
+        ${readOnly ? "" : `<div class="addrow"><input type="text" placeholder="Add a task to this phase" data-newtask="${p.id}" aria-label="New task for ${esc(p.title)}"><button class="btn ghost" data-addtask="${p.id}">Add</button></div>`}
+      </div>
+    </div>`;}).join("")}</div>`;
+}
+
+function vMaterials(){
+  const list = allMaterials();
+  let planned = 0, actual = 0;
+  const rows = list.map(m => {
+    const r = matRow(m);
+    if (r.status !== "Not needed") planned += Number(m.planned) || 0;
+    actual += Number(r.actual) || 0;
+    const dis = readOnly ? "disabled" : "";
+    return `<tr>
+      <td>${esc(m.name)}${m.rec ? ` <span class="added">Added</span>` : ""}${m.custom ? ` <span class="added">Custom</span>` : ""}<div class="small muted">${esc(m.cat)}</div></td>
+      <td>${m.link ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">Product page</a>` : `<span class="muted small">Not chosen</span>`}</td>
+      <td class="num">${money(m.planned)}</td>
+      <td><input type="number" step="0.01" min="0" value="${esc(r.actual)}" data-mat="${m.id}" data-field="actual" aria-label="Actual cost" ${dis}></td>
+      <td><select data-mat="${m.id}" data-field="status" aria-label="Status" ${dis}>${STATUSES.map(s => `<option ${s===r.status?"selected":""}>${s}</option>`).join("")}</select></td>
+      <td><input type="text" value="${esc(r.note)}" data-mat="${m.id}" data-field="note" aria-label="Notes" ${dis}></td>
+      <td>${m.custom && !readOnly ? `<button class="xbtn" data-remove-mat="${m.id}">Remove</button>` : ""}</td>
+    </tr>`;
+  }).join("");
+  return `<h2>Materials and budget</h2>
+  <p class="lede">Items from Cristian’s parts list, plus items marked “Added” that the proposal mentions or the design will likely need. Planned prices for added items are rough estimates.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Item</th><th>Link</th><th class="num">Planned</th><th>Actual $</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr><td colspan="2">Totals (proposal estimate: $130–200)</td><td class="num">${money(planned)}</td><td class="num">${money(actual)}</td><td colspan="3"></td></tr></tfoot>
+  </table></div>
+  ${readOnly ? "" : `<div class="panel section">
+    <h3>Add an item</h3>
+    <div class="form">
+      <div class="wide"><label for="nmName">Item</label><input type="text" id="nmName"></div>
+      <div><label for="nmLink">Link (optional)</label><input type="url" id="nmLink" placeholder="https://"></div>
+      <div><label for="nmCost">Planned cost</label><input type="number" id="nmCost" step="0.01" min="0"></div>
+      <div><button class="btn" data-action="addMat">Add item</button></div>
+    </div>
+  </div>`}`;
+}
+
+function calcResults(){
+  const dIn = SYRINGES[calc.inSz], dOut = SYRINGES[calc.outSz];
+  const aIn = Math.PI * (dIn/2)**2, aOut = Math.PI * (dOut/2)**2; // mm²
+  const fullStrokeOut = (Number(calc.outSz) * 1000) / aOut; // mm
+  const fullStrokeIn = (Number(calc.inSz) * 1000) / aIn;
+  let pressure = calc.force / aIn * 1000; // kPa (N/mm² = MPa)
+  let capped = false;
+  if (!calc.push){ const lim = 101 * 0.5; if (pressure > lim){ pressure = lim; capped = true; } }
+  const fOut = pressure / 1000 * aOut;
+  const strokeIn = Math.min(calc.stroke, fullStrokeIn);
+  const strokeOut = strokeIn * aIn / aOut;
+  return {aIn, aOut, pressure, psi: pressure*0.145, fOut, strokeOut, fullStrokeOut, fullStrokeIn, strokeIn, ratio:aOut/aIn, capped};
+}
+
+function vDesign(){
+  const r = calcResults();
+  const sizes = Object.keys(SYRINGES);
+  const opt = sel => sizes.map(s => `<option value="${s}" ${s===sel?"selected":""}>${s} mL</option>`).join("");
+  const warn = [];
+  if (r.capped) warn.push("In pull mode the fluid can’t be pulled harder than about half an atmosphere in practice — the output force is capped, and bubbles will form near that limit. Switch to push mode.");
+  if (r.psi > 90) warn.push(`Pressure is about ${fmt(r.psi,0)} psi, above the tubing’s 90 psi rating.`);
+  if (r.strokeOut > r.fullStrokeOut) warn.push(`The output syringe would need to move ${fmt(r.strokeOut,0)} mm, but its full stroke is only about ${fmt(r.fullStrokeOut,0)} mm.`);
+  if (r.strokeOut < calc.need) warn.push(`Output moves ${fmt(r.strokeOut,0)} mm, short of the ${calc.need} mm of string travel needed. Use a smaller output syringe or a longer input stroke.`);
+  return `<h2>Design math</h2>
+  <p class="lede">The questions that decide whether the device can work, and a calculator for picking syringe sizes.</p>
+
+  <div class="grid g2">
+    <div class="panel">
+      <h3>Where does the energy come from?</h3>
+      <p>A passive system can’t create force. It can only move energy from one place to another, or store it and give it back later. Pick one and write it down:</p>
+      <p class="small"><strong>Redirect</strong> a stronger motion (wrist, elbow or shoulder) into finger flexion, like tenodesis splints and body-powered prosthetics.<br><strong>Store</strong> energy in a spring or elastic and release it while closing the hand.<br><strong>Hold</strong> a grip with a valve so muscles don’t have to keep squeezing.</p>
+      <p class="small muted">If extending the same hand drives the input, the fluid pushes back on the fingers at the same moment they’re opening — the timing works against you.</p>
+    </div>
+    <div class="panel">
+      <h3>Push, don’t pull</h3>
+      <p>Pulling a plunger makes suction, and suction can never exceed about 1 atmosphere (14.7 psi). Long before that, dissolved air bubbles out and air leaks past the seal. Pushing has no such limit.</p>
+      <p class="small">Mount the output syringe so its plunger pushes against a small lever or pulley that pulls the tendon string.</p>
+    </div>
+  </div>
+
+  <div class="panel section">
+    <h3>Push-push layout</h3>
+    <svg class="schem" viewBox="0 0 720 210" role="img" aria-label="Diagram: input syringe pushed by a body motion sends fluid through tubing to an output syringe on the wrist, whose plunger pushes a lever that pulls a string along the finger.">
+      <rect x="20" y="90" width="150" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="22" y="92" width="96" height="30" fill="var(--fluid-soft)"/>
+      <rect x="118" y="92" width="6" height="30" fill="var(--ink)"/>
+      <line x1="124" y1="107" x2="200" y2="107" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M222 96 l-16 11 l16 11" fill="none" stroke="var(--orange)" stroke-width="3"/>
+      <text x="20" y="80">Input syringe (pushed)</text>
+      <text x="170" y="146">body motion pushes here</text>
+      <path d="M20 107 C -10 107, 0 30, 120 30 L 430 30 C 500 30, 500 107, 470 107" fill="none" stroke="var(--fluid)" stroke-width="5"/>
+      <text x="250" y="22">Fluid-filled tubing</text>
+      <rect x="350" y="90" width="120" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="400" y="92" width="68" height="30" fill="var(--fluid-soft)"/>
+      <rect x="394" y="92" width="6" height="30" fill="var(--ink)"/>
+      <line x1="394" y1="107" x2="330" y2="107" stroke="var(--ink)" stroke-width="3"/>
+      <text x="350" y="146">Output syringe (pushes out)</text>
+      <circle cx="320" cy="107" r="12" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <text x="268" y="176">pulley or lever</text>
+      <path d="M320 95 L 560 95 Q 640 95 690 140" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <circle cx="560" cy="95" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="630" cy="104" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="690" cy="140" r="5" fill="var(--ink)"/>
+      <text x="540" y="76">Tendon string through guides</text>
+      <text x="615" y="168">fingertip anchor</text>
+    </svg>
+    <p class="small muted">Layout is illustrative; where the input is mounted depends on the energy source chosen above.</p>
+  </div>
+
+  <div class="panel section">
+    <h3>Syringe calculator</h3>
+    <p class="small muted">Force scales with plunger area; travel scales the other way. Results ignore seal friction and string stretch, which both reduce real output.</p>
+    <div class="form">
+      <div><label for="cIn">Input syringe</label><select id="cIn" data-calc="inSz">${opt(calc.inSz)}</select></div>
+      <div><label for="cOut">Output syringe</label><select id="cOut" data-calc="outSz">${opt(calc.outSz)}</select></div>
+      <div><label for="cF">Force on input plunger (N)</label><input type="number" id="cF" min="0" step="1" value="${calc.force}" data-calc="force"></div>
+      <div><label for="cS">Input stroke (mm)</label><input type="number" id="cS" min="0" step="1" value="${calc.stroke}" data-calc="stroke"></div>
+      <div><label for="cN">String travel needed (mm)</label><input type="number" id="cN" min="0" step="1" value="${calc.need}" data-calc="need"></div>
+      <div><label for="cM">Mode</label><select id="cM" data-calc="push"><option value="1" ${calc.push?"selected":""}>Push (recommended)</option><option value="0" ${!calc.push?"selected":""}>Pull</option></select></div>
+    </div>
+    <div class="calc-out">
+      <div class="stat"><div class="v">${fmt(r.fOut,1)} N</div><div class="k">Output force (${fmt(r.fOut*0.2248,1)} lb)</div></div>
+      <div class="stat"><div class="v">${fmt(r.strokeOut,0)} mm</div><div class="k">Output travel</div></div>
+      <div class="stat"><div class="v">${fmt(r.psi,1)} psi</div><div class="k">Line pressure</div></div>
+      <div class="stat"><div class="v">×${fmt(r.ratio,2)}</div><div class="k">Force ratio (output/input)</div></div>
+    </div>
+    ${warn.length ? warn.map(w => `<div class="alert">${esc(w)}</div>`).join("") : `<div class="ok">This combination covers the needed travel within the tubing’s rating.</div>`}
+    <p class="small muted" style="margin-top:10px">Syringe inner diameters are typical values (1 mL ≈ 4.8 mm, 10 mL ≈ 14.5 mm, 60 mL ≈ 26.7 mm). Measure your own barrels for better numbers. 10 N ≈ 2.2 lb.</p>
+  </div>`;
+}
+
+function vTesting(){
+  const t = state.logs.trials, b = state.logs.bench;
+  const dis = readOnly ? "disabled" : "";
+  const avg = (arr, k) => { const v = arr.map(x => Number(x[k])).filter(Number.isFinite); return v.length ? v.reduce((a,c)=>a+c,0)/v.length : NaN; };
+  const byCond = CONDITIONS.map(c => { const rows = t.filter(x => x.cond === c.id); return {c, n:rows.length, grip:avg(rows,"grip"), reps:avg(rows,"reps"), hold:avg(rows,"hold"), rpe:avg(rows,"rpe")}; });
+  const bare = byCond[0].grip;
+  const maxGrip = Math.max(...byCond.map(x => Number.isFinite(x.grip) ? x.grip : 0), 1);
+  const today = new Date().toISOString().slice(0,10);
+  return `<h2>Testing</h2>
+  <p class="lede">Cristian is the only test subject, so the plan is many trials over several days with the order of conditions changed between days. The bench test doesn’t depend on effort at all, so it’s the cleanest evidence.</p>
+  <div class="grid g4">${CONDITIONS.map(c => `<div class="panel"><div class="weeknum" style="font-size:1.4rem">${c.id}</div><div class="small">${esc(c.name)}</div></div>`).join("")}</div>
+
+  <div class="section">
+    <h3>Results so far</h3>
+    ${t.length ? `<div class="panel">
+      ${byCond.filter(x => x.n).map(x => `<div class="barrow"><span>${x.c.id}: ${esc(x.c.name)}</span><div><div class="bar" style="width:${(x.grip/maxGrip*100)||0}%"></div></div><span class="num">${fmt(x.grip)} lb</span></div>`).join("")}
+      <p class="small muted" style="margin-top:8px">Average max grip by condition.</p>
+    </div>
+    <div class="tablewrap section"><table>
+      <thead><tr><th>Condition</th><th class="num">Trials</th><th class="num">Avg max grip (lb)</th><th class="num">% of bare hand</th><th class="num">Avg reps</th><th class="num">Avg hold (s)</th><th class="num">Avg effort</th></tr></thead>
+      <tbody>${byCond.map(x => `<tr><td>${x.c.id}: ${esc(x.c.name)}</td><td class="num">${x.n}</td><td class="num">${fmt(x.grip)}</td><td class="num">${Number.isFinite(bare)&&Number.isFinite(x.grip) ? fmt(x.grip/bare*100,0)+"%" : "–"}</td><td class="num">${fmt(x.reps)}</td><td class="num">${fmt(x.hold)}</td><td class="num">${fmt(x.rpe)}</td></tr>`).join("")}</tbody>
+    </table></div>` : `<p class="muted">No trials logged yet. Add the first one below.</p>`}
+  </div>
+
+  ${readOnly ? "" : `<div class="panel section">
+    <h3>Log a trial</h3>
+    <div class="form">
+      <div><label for="trD">Date</label><input type="date" id="trD" value="${today}"></div>
+      <div><label for="trC">Condition</label><select id="trC">${CONDITIONS.map(c => `<option value="${c.id}">${c.id}: ${esc(c.name)}</option>`).join("")}</select></div>
+      <div><label for="trG">Max grip (lb)</label><input type="number" id="trG" step="0.1" min="0"></div>
+      <div><label for="trR">Reps</label><input type="number" id="trR" step="1" min="0"></div>
+      <div><label for="trH">Hold time (s)</label><input type="number" id="trH" step="0.1" min="0"></div>
+      <div><label for="trE">Effort (0–10)</label><input type="number" id="trE" step="1" min="0" max="10"></div>
+      <div class="wide"><label for="trN">Notes</label><input type="text" id="trN"></div>
+      <div><button class="btn" data-action="addTrial">Save trial</button></div>
+    </div>
+  </div>`}
+
+  ${t.length ? `<div class="tablewrap section"><table>
+    <thead><tr><th>Date</th><th>Cond.</th><th class="num">Grip</th><th class="num">Reps</th><th class="num">Hold</th><th class="num">Effort</th><th>Notes</th><th></th></tr></thead>
+    <tbody>${t.slice().sort((a,b)=> (b.date||"").localeCompare(a.date||"")).map(x => `<tr><td>${esc(x.date)}</td><td>${esc(x.cond)}</td><td class="num">${esc(x.grip)}</td><td class="num">${esc(x.reps)}</td><td class="num">${esc(x.hold)}</td><td class="num">${esc(x.rpe)}</td><td>${esc(x.notes)}</td><td>${readOnly?"":`<button class="xbtn" data-remove-log="trials|${x.id}">Remove</button>`}</td></tr>`).join("")}</tbody>
+  </table></div>` : ""}
+
+  <div class="section">
+    <h3>Bench test: force to close the glove</h3>
+    <p class="small muted">Pull each finger closed with a luggage or spring scale at a set position, once with the assist connected and once with it slack.</p>
+    ${readOnly ? "" : `<div class="panel">
+      <div class="form">
+        <div><label for="bD">Date</label><input type="date" id="bD" value="${today}"></div>
+        <div><label for="bP">Finger and position</label><input type="text" id="bP" placeholder="Index, half closed"></div>
+        <div><label for="bOff">Force, assist slack (lb)</label><input type="number" id="bOff" step="0.1" min="0"></div>
+        <div><label for="bOn">Force, assist on (lb)</label><input type="number" id="bOn" step="0.1" min="0"></div>
+        <div class="wide"><label for="bN">Notes</label><input type="text" id="bN"></div>
+        <div><button class="btn" data-action="addBench">Save measurement</button></div>
+      </div>
+    </div>`}
+    ${b.length ? `<div class="tablewrap section"><table>
+      <thead><tr><th>Date</th><th>Finger and position</th><th class="num">Slack (lb)</th><th class="num">On (lb)</th><th class="num">Change</th><th>Notes</th><th></th></tr></thead>
+      <tbody>${b.slice().sort((a,c)=>(c.date||"").localeCompare(a.date||"")).map(x => { const off=Number(x.off), on=Number(x.on); const ch = off>0 && Number.isFinite(on) ? ((on-off)/off*100) : NaN; return `<tr><td>${esc(x.date)}</td><td>${esc(x.pos)}</td><td class="num">${esc(x.off)}</td><td class="num">${esc(x.on)}</td><td class="num">${Number.isFinite(ch) ? (ch>0?"+":"")+fmt(ch,0)+"%" : "–"}</td><td>${esc(x.notes)}</td><td>${readOnly?"":`<button class="xbtn" data-remove-log="bench|${x.id}">Remove</button>`}</td></tr>`; }).join("")}</tbody>
+    </table></div>` : `<p class="muted small" style="margin-top:10px">No bench measurements yet.</p>`}
+  </div>`;
+}
+
+function vSwot(){
+  const q = (k, name, neg) => `<div class="${neg?"neg":""}"><h3><span class="letter">${k}</span>${name}</h3><ul>${SWOT[k].map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  return `<h2>SWOT and advice</h2>
+  <p class="lede">A review of the proposal and parts list. This is a learning project, so treat these as pointers, not requirements.</p>
+  <div class="swot">${q("S","Strengths")}${q("W","Weaknesses",true)}${q("O","Opportunities")}${q("T","Threats",true)}</div>
+  <div class="grid g2 section">
+    <div class="panel"><h3>Do these first</h3>${SUGGESTIONS.filter(s=>s.top).map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}</div>
+    <div class="panel"><h3>When you get there</h3>${SUGGESTIONS.filter(s=>!s.top).map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}</div>
+  </div>
+  <div class="section">
+    <h3>Sources from the proposal</h3>
+    <ul class="refs">${REFS.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
+  </div>`;
+}
+
+function vNotes(){
+  const entries = state.notes.entries.slice().sort((a,b) => (b.date||"").localeCompare(a.date||"") || (b.t||0)-(a.t||0));
+  const today = new Date().toISOString().slice(0,10);
+  return `<h2>Notes and meetings</h2>
+  <p class="lede">Meeting notes, decisions, build updates, photos described in words — anything worth remembering.</p>
+  ${readOnly ? "" : `<div class="panel">
+    <div class="form">
+      <div><label for="nD">Date</label><input type="date" id="nD" value="${today}"></div>
+      <div><label>Written by</label><div style="padding:7px 0">${esc((who && who.name) || "")}</div></div>
+      <div class="wide"><label for="nT">Note</label><textarea id="nT"></textarea></div>
+      <div><button class="btn" data-action="addNote">Save note</button></div>
+    </div>
+  </div>`}
+  <div class="section">${entries.length ? entries.map(n => `<div class="note"><div class="meta"><span>${esc(n.date)} · ${esc(n.author)}</span>${readOnly?"":`<button class="xbtn" data-remove-note="${n.id}">Remove</button>`}</div><div class="body">${esc(n.text)}</div></div>`).join("") : `<p class="muted">No notes yet. The first meeting is a good place to start.</p>`}</div>`;
+}
+
+/* ---------- Render ---------- */
+function render(){
+  renderHeader(); renderTabs();
+  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes};
+  document.getElementById("main").innerHTML = (views[currentTab] || vOverview)();
+}
+function requestRender(){
+  const a = document.activeElement;
+  if (a && a.closest && a.closest("#main") && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName) && a.type !== "checkbox"){
+    renderPending = true; return;
+  }
+  renderPending = false; render();
+}
+document.addEventListener("focusout", () => {
+  if (renderPending) setTimeout(() => { if (renderPending) requestRender(); }, 0);
+});
+
+/* ---------- Events ---------- */
+function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+
+document.getElementById("tabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-tab]"); if (!b) return;
+  currentTab = b.dataset.tab;
+  try { history.replaceState(null, "", location.pathname + location.search + "#" + currentTab); } catch(_){}
+  render();
+  const again = document.querySelector(`[data-tab="${currentTab}"]`); if (again) again.focus();
+});
+
+const main = document.getElementById("main");
+main.addEventListener("change", e => {
+  const el = e.target;
+  if (el.dataset.toggle){
+    const key = el.dataset.toggle, on = el.checked;
+    mutate(s => { if (key.startsWith("sugg:")) s.progress.sugg[key.slice(5)] = on; else s.progress.tasks[key] = on; });
+    render(); return;
+  }
+  if (el.dataset.setting){ const k = el.dataset.setting, v = el.value; mutate(s => { s.progress[k] = v; }); render(); return; }
+  if (el.dataset.mat){
+    const id = el.dataset.mat, field = el.dataset.field;
+    const v = field === "actual" ? (el.value === "" ? "" : Number(el.value)) : el.value;
+    mutate(s => { const o = s.materials.items[id] = s.materials.items[id] || {}; o[field] = v; });
+    requestRender(); return;
+  }
+  if (el.dataset.calc){
+    const k = el.dataset.calc;
+    calc[k] = k === "push" ? el.value === "1" : (k === "inSz" || k === "outSz" ? el.value : Math.max(0, Number(el.value) || 0));
+    renderPending = false; render();
+    const again = document.querySelector(`[data-calc="${k}"]`); if (again) again.focus();
+  }
+});
+main.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.dataset.newtask){ e.preventDefault(); addTask(e.target.dataset.newtask); }
+});
+main.addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.addtask) return addTask(t.dataset.addtask);
+  if (t.dataset.removeTask){
+    const [pid, tid] = t.dataset.removeTask.split("|");
+    mutate(s => { s.progress.custom[pid] = (s.progress.custom[pid] || []).filter(x => x.id !== tid); delete s.progress.tasks[tid]; });
+    render(); return;
+  }
+  if (t.dataset.removeMat){
+    const id = t.dataset.removeMat;
+    mutate(s => { s.materials.custom = s.materials.custom.filter(x => x.id !== id); delete s.materials.items[id]; });
+    render(); return;
+  }
+  if (t.dataset.removeLog){
+    const [k, id] = t.dataset.removeLog.split("|");
+    mutate(s => { s.logs[k] = s.logs[k].filter(x => x.id !== id); });
+    render(); return;
+  }
+  if (t.dataset.removeNote){
+    const id = t.dataset.removeNote;
+    mutate(s => { s.notes.entries = s.notes.entries.filter(x => x.id !== id); });
+    render(); return;
+  }
+  const a = t.dataset.action;
+  if (a === "addMat"){
+    const name = val("nmName"); if (!name){ document.getElementById("nmName").focus(); return; }
+    let link = val("nmLink"); if (link && !/^https?:\/\//i.test(link)) link = "https://" + link;
+    const item = {id:"c" + uid(), name, link, planned:Number(val("nmCost")) || 0};
+    mutate(s => s.materials.custom.push(clone(item))); render();
+  } else if (a === "addTrial"){
+    const row = {id:uid(), date:val("trD"), cond:val("trC"), grip:val("trG"), reps:val("trR"), hold:val("trH"), rpe:val("trE"), notes:val("trN")};
+    if (!row.grip && !row.reps && !row.hold && !row.rpe){ document.getElementById("trG").focus(); return; }
+    mutate(s => s.logs.trials.push(clone(row))); render();
+  } else if (a === "addBench"){
+    const row = {id:uid(), date:val("bD"), pos:val("bP"), off:val("bOff"), on:val("bOn"), notes:val("bN")};
+    if (!row.off && !row.on){ document.getElementById("bOff").focus(); return; }
+    mutate(s => s.logs.bench.push(clone(row))); render();
+  } else if (a === "addNote"){
+    const text = val("nT"); if (!text){ document.getElementById("nT").focus(); return; }
+    const row = {id:uid(), t:Date.now(), date:val("nD"), author:(who && who.name) || "", text};
+    mutate(s => s.notes.entries.push(clone(row))); render();
+  }
+});
+function addTask(pid){
+  const input = document.querySelector(`[data-newtask="${pid}"]`);
+  const text = input ? input.value.trim() : ""; if (!text) return;
+  const item = {id:"u" + uid(), text};
+  mutate(s => (s.progress.custom[pid] = s.progress.custom[pid] || []).push(clone(item)));
+  renderPending = false; render();
+  const again = document.querySelector(`[data-newtask="${pid}"]`); if (again) again.focus();
+}
+
+/* Export / import / sign out */
+document.getElementById("exportBtn").addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(Object.assign({version:1}, state), null, 2)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "eva-glove-tracker-backup-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+document.getElementById("importFile").addEventListener("change", async e => {
+  const f = e.target.files && e.target.files[0]; if (!f) return;
+  try {
+    const data = normalize(JSON.parse(await f.text()));
+    mutate(s => { DOCS.forEach(d => { s[d] = clone(data[d]); }); });
+    render();
+  } catch(err){ showBanner("That file couldn’t be read. Choose a file made with Download backup."); }
+  e.target.value = "";
+});
+document.getElementById("signout").addEventListener("click", signOut);
+
+/* Start */
+const h = (location.hash || "").slice(1);
+if (TABS.some(t => t[0] === h)) currentTab = h;
+boot();
+})();
+</script>
+</body>
+</html>
