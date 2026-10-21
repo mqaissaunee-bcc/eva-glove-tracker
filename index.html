@@ -172,6 +172,106 @@ legend{font-family:var(--display);font-weight:600;font-size:1.05rem;padding:0 6p
 .gate-msg{min-height:1.4em;margin:4px 0 0;font-size:.92rem}
 a.btn{text-decoration:none;display:inline-block}
 .sync .sep{color:var(--rule)}
+/* Editing */
+.small-btn{padding:4px 10px;font-size:.82rem;margin-left:6px}
+#editToggle[aria-pressed="true"]{background:var(--orange);color:#fff;border-color:var(--orange)}
+.edit-hint{background:var(--orange-soft);border-radius:4px;padding:8px 12px;font-size:.9rem;margin:0 0 16px}
+.edit-row{display:flex;gap:8px;align-items:flex-start;padding:6px 0}
+.edit-row input[type=text],.edit-row textarea{flex:1;min-width:0}
+.edit-row textarea{min-height:52px}
+.edit-list .addrow{margin-top:10px}
+.sugg-edit{display:flex;flex-direction:column;gap:6px;padding:10px 0;border-top:1px solid var(--rule)}
+.sugg-edit:first-of-type{border-top:0}
+.sugg-edit .row{display:flex;justify-content:space-between;align-items:center}
+label.inline{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+td input.mt{margin-top:6px}
+
+/* Presentation tab */
+.pres-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
+.slide-list{display:flex;flex-direction:column;gap:26px}
+.slide-item{border:1px solid var(--rule);border-radius:6px;background:var(--surface);padding:14px 16px}
+.slide-item.off{background:transparent;border-style:dashed}
+.slide-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.slide-thumb{max-width:760px;border:1px solid var(--rule)}
+.slide-fields{display:grid;gap:10px;margin-top:12px;max-width:760px}
+.slide-fields label{font-size:.82rem;color:var(--muted);display:block;margin-bottom:2px}
+
+/* Slides: fixed palette so they look the same in any theme, on a projector and in print */
+.slide{--s-bg:#FFFFFF;--s-ink:#16213A;--s-muted:#566074;--s-accent:#E5531A;--s-fluid:#1F7A8C;--s-soft:#EEF2F5;--s-rule:#D3D9E1;
+  container-type:inline-size;position:relative;aspect-ratio:16/9;width:100%;overflow:hidden;background:var(--s-bg);color:var(--s-ink);font-family:var(--body);
+  -webkit-print-color-adjust:exact;print-color-adjust:exact}
+.slide .s-inner{position:absolute;inset:0;padding:5cqw 6cqw 6.5cqw;display:flex;flex-direction:column}
+.slide .s-foot{position:absolute;left:6cqw;right:6cqw;bottom:2.4cqw;display:flex;justify-content:space-between;font-size:1.15cqw;color:var(--s-muted);border-top:.12cqw solid var(--s-rule);padding-top:.8cqw}
+.slide .s-h2{font-family:var(--display);font-weight:700;font-size:4.1cqw;line-height:1.05;margin:0 0 2.6cqw;color:var(--s-ink)}
+.slide .s-h3{font-family:var(--display);font-weight:600;font-size:2.3cqw;margin:0 0 1.2cqw;color:var(--s-fluid)}
+.slide p{max-width:none;margin:0 0 1.6cqw}
+.slide .s-lead{font-size:2.2cqw;line-height:1.4}
+.slide .s-body{font-size:1.85cqw;line-height:1.45;color:var(--s-ink)}
+.slide .s-goal{font-family:var(--display);font-weight:600;font-size:3cqw;line-height:1.2;color:var(--s-accent);margin-bottom:2.2cqw}
+.slide .s-placeholder{font-size:1.8cqw;color:var(--s-muted);border:.15cqw dashed var(--s-rule);padding:1.6cqw;border-radius:.6cqw}
+.slide ul{margin:0;padding-left:2.6cqw}
+.slide li{max-width:none}
+.slide .s-list li{font-size:1.95cqw;line-height:1.4;margin-bottom:1.1cqw}
+.slide .s-big li{font-size:2.35cqw;margin-bottom:1.6cqw}
+.slide .s-two{columns:2;column-gap:4cqw}
+.slide .s-cols{display:grid;grid-template-columns:1fr 1fr;gap:4cqw;align-items:start}
+.slide .s-cols-wide{grid-template-columns:1.7fr 1fr}
+.slide .s-fig svg{width:100%;height:auto;max-width:none}
+.slide .s-fig{width:78%;margin:0 auto 2.4cqw}
+.slide .s-fig svg text{font-size:14px;fill:var(--s-ink)}
+.slide .s-conds{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-top:auto}
+.slide .s-conds div{background:var(--s-soft);border-radius:.6cqw;padding:1.6cqw;font-size:1.8cqw}
+.slide .s-conds b{display:block;font-family:var(--display);font-size:3.2cqw;color:var(--s-fluid);line-height:1}
+.slide .s-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:2cqw;margin-bottom:3cqw}
+.slide .s-stats div{background:var(--s-soft);border-radius:.6cqw;padding:1.8cqw;font-size:1.7cqw;color:var(--s-muted)}
+.slide .s-stats b{display:block;font-family:var(--display);font-size:4.4cqw;line-height:1;color:var(--s-ink);margin-bottom:.6cqw}
+.slide .s-timeline{display:flex;gap:.4cqw;height:3.4cqw;margin-bottom:2.4cqw}
+.slide .s-timeline div{position:relative;background:var(--s-soft);border-radius:.3cqw;overflow:hidden}
+.slide .s-tfill{position:absolute;left:0;top:0;bottom:0;background:var(--s-fluid)}
+.slide .s-timeline i{position:relative;font-style:normal;font-size:1.2cqw;color:var(--s-ink);padding:.3cqw .6cqw;display:block;mix-blend-mode:multiply}
+.slide .s-bars{display:flex;flex-direction:column;gap:1.6cqw;margin-bottom:2.4cqw}
+.slide .s-barrow{display:grid;grid-template-columns:28cqw 1fr 10cqw;gap:1.6cqw;align-items:center;font-size:1.9cqw}
+.slide .s-barrow div{background:var(--s-soft);height:3cqw;border-radius:.3cqw;overflow:hidden}
+.slide .s-barrow i{display:block;height:100%;background:var(--s-fluid)}
+.slide .s-barrow b{text-align:right;font-family:var(--display);font-size:2.4cqw}
+.slide .s-swot{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1.4cqw;flex:1;min-height:0}
+.slide .s-swot div{background:var(--s-soft);border-radius:.6cqw;padding:1.4cqw 1.8cqw;border-top:.5cqw solid var(--s-fluid);overflow:hidden}
+.slide .s-swot div.neg{border-top-color:var(--s-accent)}
+.slide .s-swot h3{font-family:var(--display);font-size:2cqw;margin:0 0 .6cqw}
+.slide .s-swot li{font-size:1.25cqw;line-height:1.28;margin-bottom:.35cqw}
+.slide .s-refs{padding-left:2cqw}
+.slide .s-refs li{font-size:1.3cqw;line-height:1.35;margin-bottom:.7cqw}
+.slide.s-title{background:#16213A;color:#FFFFFF}
+.slide.s-title .s-titlewrap{margin:auto 0}
+.slide .s-bar{width:9cqw;height:.8cqw;background:var(--s-accent);margin-bottom:3cqw}
+.slide .s-h1{font-family:var(--display);font-weight:700;font-size:6cqw;line-height:1.02;margin:0 0 3cqw;max-width:70cqw;color:#FFFFFF}
+.slide .s-by{font-size:2.8cqw;margin:0 0 1.4cqw;font-weight:600}
+.slide .s-meta{font-size:1.9cqw;line-height:1.45;color:#C9D1DD}
+.slide .s-event{margin-top:2cqw;color:#FFB08F}
+.slide .s-thanks{list-style:none;padding:0}
+.slide .s-thanks li{font-size:2.2cqw;margin-bottom:.8cqw}
+
+/* Presenter */
+#presenter{position:fixed;inset:0;z-index:50;background:#05080D;display:flex;flex-direction:column;align-items:center;justify-content:center;outline:none}
+#presenter[hidden]{display:none}
+#pstage{width:min(100vw, calc((100vh - 56px) * 16 / 9));cursor:pointer}
+#pnotes{position:absolute;left:50%;transform:translateX(-50%);bottom:56px;width:min(900px,94vw);background:rgba(22,33,58,.94);color:#fff;padding:12px 16px;border-radius:6px;white-space:pre-wrap;font-size:1rem}
+#pnotes[hidden]{display:none}
+.pbar{position:absolute;bottom:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:center;gap:10px;color:#C9D1DD;padding-bottom:env(safe-area-inset-bottom,0px)}
+.pbar button{background:transparent;color:#E6EAF0;border:1px solid #3A4659;border-radius:4px;padding:6px 14px;cursor:pointer;font:inherit;font-size:.9rem}
+.pbar button:hover{border-color:#E6EAF0}
+#pcount{min-width:70px;text-align:center;font-size:.9rem}
+
+/* Print the deck: one slide per 16:9 page */
+#printdeck{display:none}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  body.printing > *:not(#printdeck){display:none!important}
+  body.printing #printdeck{display:block}
+  body.printing{background:#fff}
+  #printdeck .slide{width:13.333in;height:7.5in;aspect-ratio:auto;break-after:page;page-break-after:always}
+  #printdeck .slide:last-child{break-after:auto;page-break-after:auto}
+}
 footer{color:var(--muted);font-size:.85rem;padding:20px 0 40px;border-top:1px solid var(--rule)}
 footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
@@ -184,10 +284,10 @@ footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
   <header class="top">
     <div class="title-row">
       <div>
-        <h1>Passive hydraulic grip assistance for EVA gloves</h1>
+        <h1 id="ptitle">Passive hydraulic grip assistance for EVA gloves</h1>
         <p class="byline">Cristian Fama, investigator · Michael Qaissaunee, faculty advisor · September 2026 to May 2027</p>
       </div>
-      <div class="sync" id="sync"><span class="dot" id="syncdot"></span><span id="synctext">Loading…</span><span class="sep">|</span><span id="who"></span><button class="xbtn" id="signout">Sign out</button></div>
+      <div class="sync" id="sync"><span class="dot" id="syncdot"></span><span id="synctext">Loading…</span><span class="sep">|</span><span id="who"></span><button class="xbtn" id="signout">Sign out</button><button class="btn ghost small-btn" id="editToggle" aria-pressed="false">Edit content</button></div>
     </div>
     <div class="strip" aria-label="Project timeline">
       <div class="strip-head">
@@ -211,6 +311,11 @@ footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
     </div>
   </footer>
 </div>
+</div>
+<div id="presenter" hidden tabindex="-1" role="dialog" aria-label="Presentation">
+  <div id="pstage"></div>
+  <div id="pnotes" hidden></div>
+  <div class="pbar"><button id="pPrev">Previous</button><span id="pcount"></span><button id="pNext">Next</button><button id="pNotesBtn">Notes</button><button id="pClose">Exit</button></div>
 </div>
 
 <script>
@@ -347,19 +452,21 @@ const REFS = [
 const SYRINGES = {"1":4.78,"3":8.66,"5":12.06,"10":14.5,"20":19.13,"30":21.7,"60":26.7};
 
 /* ---------- State ---------- */
-const DOCS = ["progress","materials","logs","notes"];
+const DOCS = ["progress","materials","logs","notes","content"];
 function defaults(name){
   switch(name){
     case "progress": return {tasks:{}, custom:{}, sugg:{}, start:"2026-09-02"};
     case "materials": return {items:{}, custom:[]};
     case "logs": return {trials:[], bench:[]};
     case "notes": return {entries:[]};
+    case "content": return contentDefaults();
   }
 }
 const state = {};
 DOCS.forEach(d => state[d] = defaults(d));
 const readOnly = false;
 let currentTab = "overview";
+let editing = false;
 let renderPending = false;
 const calc = {inSz:"10", outSz:"3", force:20, stroke:30, need:40, push:true};
 
@@ -369,7 +476,7 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const money = n => "$" + (Number(n)||0).toFixed(2);
 const fmt = (n, d=1) => (Number.isFinite(n) ? n.toFixed(d) : "–");
 
-function normalize(obj){ const out = {}; DOCS.forEach(d => out[d] = Object.assign(defaults(d), (obj && obj[d]) || {})); return out; }
+function normalize(obj){ const out = {}; DOCS.forEach(d => out[d] = d === "content" ? fillContent(obj && obj.content) : Object.assign(defaults(d), (obj && obj[d]) || {})); return out; }
 function adopt(obj){ const n = normalize(obj); DOCS.forEach(d => state[d] = n[d]); }
 
 /* ---------- GitHub storage ---------- */
@@ -697,6 +804,71 @@ async function boot(){
   if (s){ token = s.token; who = {name:s.name, role:s.role}; return start(); }
   showLogin();
 }
+const SCHEMATIC = `<svg class="schem" viewBox="0 0 720 210" role="img" aria-label="Diagram: input syringe pushed by a body motion sends fluid through tubing to an output syringe on the wrist, whose plunger pushes a lever that pulls a string along the finger.">
+      <rect x="20" y="90" width="150" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="22" y="92" width="96" height="30" fill="var(--fluid-soft)"/>
+      <rect x="118" y="92" width="6" height="30" fill="var(--ink)"/>
+      <line x1="124" y1="107" x2="200" y2="107" stroke="var(--ink)" stroke-width="3"/>
+      <path d="M222 96 l-16 11 l16 11" fill="none" stroke="var(--orange)" stroke-width="3"/>
+      <text x="20" y="80">Input syringe (pushed)</text>
+      <text x="170" y="146">body motion pushes here</text>
+      <path d="M20 107 C -10 107, 0 30, 120 30 L 430 30 C 500 30, 500 107, 470 107" fill="none" stroke="var(--fluid)" stroke-width="5"/>
+      <text x="250" y="22">Fluid-filled tubing</text>
+      <rect x="350" y="90" width="120" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="400" y="92" width="68" height="30" fill="var(--fluid-soft)"/>
+      <rect x="394" y="92" width="6" height="30" fill="var(--ink)"/>
+      <line x1="394" y1="107" x2="330" y2="107" stroke="var(--ink)" stroke-width="3"/>
+      <text x="350" y="146">Output syringe (pushes out)</text>
+      <circle cx="320" cy="107" r="12" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <text x="268" y="176">pulley or lever</text>
+      <path d="M320 95 L 560 95 Q 640 95 690 140" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="6 4"/>
+      <circle cx="560" cy="95" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="630" cy="104" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
+      <circle cx="690" cy="140" r="5" fill="var(--ink)"/>
+      <text x="540" y="76">Tendon string through guides</text>
+      <text x="615" y="168">fingertip anchor</text>
+    </svg>`;
+
+/* ---------- Editable content defaults ---------- */
+function contentDefaults(){
+  return {
+    summary:{
+      title:"Passive hydraulic grip assistance for EVA gloves",
+      problem:"Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. Repetitive gripping is among the most fatiguing parts of a spacewalk, and Artemis missions will ask for more EVA hours than Apollo did.",
+      approach:"A glove with rubber bands on the back stands in for a pressurized glove. A passive hydraulic system — syringes, fluid-filled tubing and tendon strings — is added to assist finger flexion without motors or electronics. Hand performance and perceived effort are compared with a bare hand, the glove with bands, and the glove with bands plus the assist.",
+      goal:"Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand."
+    },
+    swot:{S:SWOT.S.map((t,i)=>({id:"S"+i,text:t})), W:SWOT.W.map((t,i)=>({id:"W"+i,text:t})), O:SWOT.O.map((t,i)=>({id:"O"+i,text:t})), T:SWOT.T.map((t,i)=>({id:"T"+i,text:t}))},
+    sugg:SUGGESTIONS.map(s => Object.assign({}, s)),
+    taskText:{}, taskHidden:{}, phaseTitle:{},
+    pres:{
+      event:"End-of-semester presentation", date:"December 2026",
+      facts:"Grip strength in a pressurized glove drops to 46–58% of bare-hand strength (Mesloh et al.)\nMost spacewalks last 5 to 8 hours\nArtemis plans up to 24 hours of surface EVA per crewmember per week (Estep et al.)\nGlove-related hand injuries have been reported throughout NASA’s history (McFarland et al.)",
+      prior:"NASA and GM’s Space Suit RoboGlove uses sensors and motors to pull tendons that help close the fingers\nIt reduced the effort to close the hand for more than half of test subjects (Madden et al.)\nIt also made opening the hand harder for many subjects, and it depends on power and electronics\nThis project asks whether a simpler, unpowered system can give some of the same help",
+      design:"", challenges:"", next:"", conclusions:"",
+      limitations:"Single test subject (the investigator)\nRubber bands approximate, but don’t reproduce, a pressurized glove",
+      thanks:"Prof. Michael Qaissaunee, faculty advisor\nBrookdale Community College",
+      hidden:{}, notes:{}
+    }
+  };
+}
+function fillContent(c){
+  const d = contentDefaults();
+  if (!c || typeof c !== "object") return d;
+  const o = Object.assign(d, c);
+  o.summary = Object.assign(contentDefaults().summary, c.summary || {});
+  o.swot = Object.assign(contentDefaults().swot, c.swot || {});
+  ["S","W","O","T"].forEach(k => { if (!Array.isArray(o.swot[k])) o.swot[k] = []; });
+  if (!Array.isArray(o.sugg)) o.sugg = contentDefaults().sugg;
+  ["taskText","taskHidden","phaseTitle"].forEach(k => { if (!o[k] || typeof o[k] !== "object") o[k] = {}; });
+  o.pres = Object.assign(contentDefaults().pres, c.pres || {});
+  if (!o.pres.hidden || typeof o.pres.hidden !== "object") o.pres.hidden = {};
+  if (!o.pres.notes || typeof o.pres.notes !== "object") o.pres.notes = {};
+  return o;
+}
+const lines = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean);
+const C = () => state.content;
+
 /* ---------- Derived values ---------- */
 function currentWeek(){
   const start = new Date((state.progress.start || "2026-09-02") + "T00:00:00");
@@ -704,9 +876,10 @@ function currentWeek(){
   const now = new Date();
   return Math.floor((now - start) / (7*86400000)) + 1;
 }
+function ptitle(p){ return C().phaseTitle[p.id] || p.title; }
 function phaseTasks(p){
   const custom = (state.progress.custom[p.id] || []).map(c => [c.id, c.text, true]);
-  return p.tasks.map(t => [t[0], t[1], false]).concat(custom);
+  return p.tasks.filter(t => !C().taskHidden[t[0]]).map(t => [t[0], C().taskText[t[0]] || t[1], false]).concat(custom);
 }
 function phaseDone(p){
   const ts = phaseTasks(p);
@@ -724,15 +897,41 @@ function matRow(m){
   return {status:o.status || "Needed", actual:o.actual ?? "", note:o.note ?? m.note ?? ""};
 }
 function allMaterials(){
-  return MATERIALS.concat((state.materials.custom || []).map(c => Object.assign({custom:true, cat:"Other", note:""}, c)));
+  const built = MATERIALS.filter(m => !(state.materials.items[m.id] || {}).hidden).map(m => {
+    const o = state.materials.items[m.id] || {};
+    return Object.assign({}, m, {
+      name: o.name ?? m.name, link: o.link ?? m.link,
+      planned: o.planned ?? m.planned, cat: o.cat ?? m.cat
+    });
+  });
+  return built.concat((state.materials.custom || []).map(c => Object.assign({custom:true, cat:"Other", note:""}, c)));
+}
+function stats(){
+  const wk = currentWeek();
+  let done = 0, total = 0;
+  PHASES.forEach(p => { const [d,n] = phaseDone(p); done += d; total += n; });
+  const list = allMaterials();
+  const mats = list.filter(m => matRow(m).status !== "Not needed");
+  const received = mats.filter(m => matRow(m).status === "Received").length;
+  const spent = list.reduce((s,m) => s + (Number(matRow(m).actual) || 0), 0);
+  const planned = mats.reduce((s,m) => s + (Number(m.planned) || 0), 0);
+  return {wk, done, total, pct: total ? Math.round(done/total*100) : 0, mats, received, spent, planned};
+}
+function trialSummary(){
+  const t = state.logs.trials;
+  const avg = (arr, k) => { const v = arr.map(x => Number(x[k])).filter(x => Number.isFinite(x) && String(x) !== ""); return v.length ? v.reduce((a,c)=>a+c,0)/v.length : NaN; };
+  const byCond = CONDITIONS.map(c => { const rows = t.filter(x => x.cond === c.id); return {c, n:rows.length, grip:avg(rows,"grip"), reps:avg(rows,"reps"), hold:avg(rows,"hold"), rpe:avg(rows,"rpe")}; });
+  const changes = state.logs.bench.map(x => { const off = Number(x.off), on = Number(x.on); return off > 0 && x.on !== "" && Number.isFinite(on) ? (on-off)/off*100 : NaN; }).filter(Number.isFinite);
+  return {byCond, bare: byCond[0].grip, benchN: changes.length, benchAvg: changes.length ? changes.reduce((a,c)=>a+c,0)/changes.length : NaN};
 }
 
 /* ---------- Header ---------- */
 function renderHeader(){
   const wk = currentWeek();
+  document.getElementById("ptitle").textContent = C().summary.title;
   const shown = Math.min(Math.max(wk,1), TOTAL_WEEKS);
   document.getElementById("weeknum").innerHTML = wk < 1 ? "Not started" : (wk > TOTAL_WEEKS ? "Project complete" : `Week ${shown}<span>of ${TOTAL_WEEKS}</span>`);
-  const now = PHASES.filter(p => wk >= p.s && wk <= p.e).map(p => p.title);
+  const now = PHASES.filter(p => wk >= p.s && wk <= p.e).map(ptitle);
   document.getElementById("phasenow").textContent = now.length ? "Now: " + now.join(" · ") : "";
   const track = document.getElementById("track");
   let html = "";
@@ -742,19 +941,23 @@ function renderHeader(){
     const width = (Math.max(nextStart, p.s) - (p.s - 1)) / TOTAL_WEEKS * 100;
     const [d,n] = phaseDone(p);
     const pct = n ? d/n*100 : 0;
-    html += `<div class="seg" style="left:${left}%;width:${width}%" title="Weeks ${p.s}–${p.e}: ${esc(p.title)} (${d}/${n} done)"><div class="fill" style="width:${pct}%"></div><span class="lbl">${i+1}</span></div>`;
+    html += `<div class="seg" style="left:${left}%;width:${width}%" title="Weeks ${p.s}–${p.e}: ${esc(ptitle(p))} (${d}/${n} done)"><div class="fill" style="width:${pct}%"></div><span class="lbl">${i+1}</span></div>`;
   });
   if (wk >= 1 && wk <= TOTAL_WEEKS){
     const pos = ((wk - 0.5) / TOTAL_WEEKS) * 100;
     html += `<div class="tick" style="left:${pos}%" aria-label="Current week"></div>`;
   }
   track.innerHTML = html;
+  const eb = document.getElementById("editToggle");
+  eb.setAttribute("aria-pressed", String(editing));
+  eb.textContent = editing ? "Done editing" : "Edit content";
+  document.body.classList.toggle("editing", editing);
 }
 
 /* ---------- Tabs ---------- */
 const TABS = [
   ["overview","Overview"],["timeline","Timeline"],["materials","Materials"],
-  ["design","Design math"],["testing","Testing"],["swot","SWOT and advice"],["notes","Notes"]
+  ["design","Design math"],["testing","Testing"],["swot","SWOT and advice"],["notes","Notes"],["present","Presentation"]
 ];
 function renderTabs(){
   document.getElementById("tabs").innerHTML = TABS.map(([id,label]) =>
@@ -762,24 +965,34 @@ function renderTabs(){
 }
 
 /* ---------- Views ---------- */
+const editHint = () => editing ? `<p class="edit-hint">Editing is on. Changes save when you leave a field.</p>` : "";
+
 function vOverview(){
-  const wk = currentWeek();
-  let done = 0, total = 0;
-  PHASES.forEach(p => { const [d,n] = phaseDone(p); done += d; total += n; });
-  const mats = allMaterials().filter(m => matRow(m).status !== "Not needed");
-  const received = mats.filter(m => matRow(m).status === "Received").length;
-  const spent = allMaterials().reduce((s,m) => s + (Number(matRow(m).actual) || 0), 0);
+  const st = stats(), wk = st.wk;
   const trials = state.logs.trials.length + state.logs.bench.length;
   const nowPhases = PHASES.filter(p => wk >= p.s && wk <= p.e);
   const behind = PHASES.filter(p => phaseStatus(p, wk) === "behind");
   const open = [];
   behind.concat(nowPhases).forEach(p => phaseTasks(p).forEach(t => { if (!state.progress.tasks[t[0]]) open.push([p, t]); }));
-  const top = SUGGESTIONS.filter(s => s.top);
-  return `
+  const top = C().sugg.filter(s => s.top);
+  const S = C().summary;
+  const summary = editing ? `
+      <h2>The project</h2>
+      <div class="form">
+        <div class="wide"><label for="eTitle">Project title</label><input type="text" id="eTitle" data-edit="summary:title" value="${esc(S.title)}"></div>
+        <div class="wide"><label for="eProb">The problem</label><textarea id="eProb" data-edit="summary:problem">${esc(S.problem)}</textarea></div>
+        <div class="wide"><label for="eAppr">The approach</label><textarea id="eAppr" data-edit="summary:approach">${esc(S.approach)}</textarea></div>
+        <div class="wide"><label for="eGoal">The goal</label><textarea id="eGoal" data-edit="summary:goal">${esc(S.goal)}</textarea></div>
+      </div>` : `
+      <h2>The project</h2>
+      <p>${esc(S.problem)}</p>
+      <p>${esc(S.approach)}</p>
+      <p><strong>Goal:</strong> ${esc(S.goal)}</p>`;
+  return `${editHint()}
   <div class="grid g4">
-    <div class="panel stat"><div class="v">${Math.round(total ? done/total*100 : 0)}%</div><div class="k">Tasks done (${done} of ${total})</div></div>
-    <div class="panel stat"><div class="v">${received}/${mats.length}</div><div class="k">Materials received</div></div>
-    <div class="panel stat"><div class="v">${money(spent)}</div><div class="k">Spent so far (estimate $130–200)</div></div>
+    <div class="panel stat"><div class="v">${st.pct}%</div><div class="k">Tasks done (${st.done} of ${st.total})</div></div>
+    <div class="panel stat"><div class="v">${st.received}/${st.mats.length}</div><div class="k">Materials received</div></div>
+    <div class="panel stat"><div class="v">${money(st.spent)}</div><div class="k">Spent so far (estimate $130–200)</div></div>
     <div class="panel stat"><div class="v">${trials}</div><div class="k">Test entries logged</div></div>
   </div>
 
@@ -789,22 +1002,17 @@ function vOverview(){
       ${open.length ? open.slice(0,7).map(([p,t]) => checkRow(t[0], t[1], `Weeks ${p.s}–${p.e}${phaseStatus(p,wk)==="behind" ? " · past its window" : ""}`)).join("") : `<p class="muted">Nothing open for the current weeks. Look ahead on the Timeline tab.</p>`}
     </div>
     <div class="panel">
-      <h3>Four things that matter most</h3>
-      ${top.map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}
+      <h3>Do these first</h3>
+      ${top.length ? top.map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("") : `<p class="muted">Mark suggestions as “Do first” on the SWOT and advice tab.</p>`}
     </div>
   </div>
 
   <div class="section grid g2">
-    <div>
-      <h2>The project</h2>
-      <p>Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. This project tests whether a passive hydraulic system — syringes, fluid-filled tubing and tendon strings on a glove — can reduce the effort needed to close the hand, without motors or electronics.</p>
-      <p>A glove with rubber bands on the back stands in for a pressurized glove. Hand performance and perceived effort are compared across three conditions: bare hand, the glove with bands, and the glove with bands plus the hydraulic assist.</p>
-      <p><strong>Goal:</strong> design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand.</p>
-    </div>
+    <div>${summary}</div>
     <div class="panel flat">
       <h3>Project settings</h3>
       <div class="form">
-        <div><label for="startDate">Week 1 starts on</label><input type="date" id="startDate" data-setting="start" value="${esc(state.progress.start)}" ${readOnly?"disabled":""}></div>
+        <div><label for="startDate">Week 1 starts on</label><input type="date" id="startDate" data-setting="start" value="${esc(state.progress.start)}"></div>
       </div>
       <p class="small muted" style="margin-top:10px">The week counter and the “past its window” flags use this date.</p>
       <h3 style="margin-top:16px">Measurements planned</h3>
@@ -813,15 +1021,22 @@ function vOverview(){
   </div>`;
 }
 
-function checkRow(key, text, why, removable){
+function checkRow(key, text, why){
   const isSugg = key.startsWith("sugg:");
   const id = isSugg ? key.slice(5) : key;
   const on = isSugg ? !!state.progress.sugg[id] : !!state.progress.tasks[id];
   const dom = "c_" + key.replace(/[^a-z0-9]/gi,"_");
   return `<div class="check ${on?"done":""}">
-    <input type="checkbox" id="${dom}" data-toggle="${esc(key)}" ${on?"checked":""} ${readOnly?"disabled":""}>
+    <input type="checkbox" id="${dom}" data-toggle="${esc(key)}" ${on?"checked":""}>
     <label for="${dom}">${esc(text)}${why ? `<span class="why">${esc(why)}</span>` : ""}</label>
-    ${removable && !readOnly ? `<button class="xbtn" data-remove-task="${esc(removable)}|${esc(id)}" aria-label="Remove task">Remove</button>` : ""}
+  </div>`;
+}
+function editTaskRow(pid, t){
+  const on = !!state.progress.tasks[t[0]];
+  return `<div class="check edit-row">
+    <input type="checkbox" data-toggle="${esc(t[0])}" ${on?"checked":""} aria-label="Done">
+    <input type="text" data-edit="task:${pid}:${esc(t[0])}" value="${esc(t[1])}" aria-label="Task">
+    <button class="xbtn" data-del="task:${pid}:${esc(t[0])}">Remove</button>
   </div>`;
 }
 
@@ -829,15 +1044,17 @@ function vTimeline(){
   const wk = currentWeek();
   const labels = {done:"Done", now:"This week", behind:"Past its window", later:""};
   return `<h2>Timeline</h2>
-  <p class="lede">The proposal’s ten phases, with tasks from the proposal and the advisor’s suggestions. Add your own tasks to any phase.</p>
+  <p class="lede">The proposal’s ten phases, with tasks from the proposal and the advisor’s suggestions. Add your own tasks to any phase, or turn on editing to reword or remove tasks.</p>
+  ${editHint()}
   <div>${PHASES.map((p,i) => {
     const st = phaseStatus(p, wk); const [d,n] = phaseDone(p);
+    const badge = labels[st] ? `<span class="badge ${st==="done"?"done":(st==="later"?"":"now")}">${labels[st]}</span>` : "";
     return `<div class="phase">
       <div class="wk">Weeks ${p.s}–${p.e}<small>Phase ${i+1} · ${d}/${n} done</small></div>
       <div>
-        <h3>${esc(p.title)}${labels[st] ? `<span class="badge ${st==="done"?"done":(st==="later"?"":"now")}">${labels[st]}</span>` : ""}</h3>
-        ${phaseTasks(p).map(t => checkRow(t[0], t[1], "", t[2] ? p.id : null)).join("")}
-        ${readOnly ? "" : `<div class="addrow"><input type="text" placeholder="Add a task to this phase" data-newtask="${p.id}" aria-label="New task for ${esc(p.title)}"><button class="btn ghost" data-addtask="${p.id}">Add</button></div>`}
+        ${editing ? `<div class="addrow" style="margin:0 0 8px"><input type="text" data-edit="phase:${p.id}" value="${esc(ptitle(p))}" aria-label="Phase title"></div>` : `<h3>${esc(ptitle(p))}${badge}</h3>`}
+        ${phaseTasks(p).map(t => editing ? editTaskRow(p.id, t) : checkRow(t[0], t[1], "")).join("")}
+        <div class="addrow"><input type="text" placeholder="Add a task to this phase" data-newtask="${p.id}" aria-label="New task for ${esc(ptitle(p))}"><button class="btn ghost" data-addtask="${p.id}">Add</button></div>
       </div>
     </div>`;}).join("")}</div>`;
 }
@@ -849,25 +1066,35 @@ function vMaterials(){
     const r = matRow(m);
     if (r.status !== "Not needed") planned += Number(m.planned) || 0;
     actual += Number(r.actual) || 0;
-    const dis = readOnly ? "disabled" : "";
+    const tag = `${m.rec ? ` <span class="added">Added</span>` : ""}${m.custom ? ` <span class="added">Custom</span>` : ""}`;
+    const nameCell = editing
+      ? `<input type="text" data-edit="mat:${m.id}:name" value="${esc(m.name)}" aria-label="Item name"><input type="text" class="mt" data-edit="mat:${m.id}:cat" value="${esc(m.cat)}" aria-label="Category">`
+      : `${esc(m.name)}${tag}<div class="small muted">${esc(m.cat)}</div>`;
+    const linkCell = editing
+      ? `<input type="url" data-edit="mat:${m.id}:link" value="${esc(m.link)}" placeholder="https://" aria-label="Link">`
+      : (m.link ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">Product page</a>` : `<span class="muted small">Not chosen</span>`);
+    const planCell = editing
+      ? `<input type="number" step="0.01" min="0" data-edit="mat:${m.id}:planned" value="${esc(m.planned)}" aria-label="Planned cost">`
+      : money(m.planned);
     return `<tr>
-      <td>${esc(m.name)}${m.rec ? ` <span class="added">Added</span>` : ""}${m.custom ? ` <span class="added">Custom</span>` : ""}<div class="small muted">${esc(m.cat)}</div></td>
-      <td>${m.link ? `<a href="${esc(m.link)}" target="_blank" rel="noopener">Product page</a>` : `<span class="muted small">Not chosen</span>`}</td>
-      <td class="num">${money(m.planned)}</td>
-      <td><input type="number" step="0.01" min="0" value="${esc(r.actual)}" data-mat="${m.id}" data-field="actual" aria-label="Actual cost" ${dis}></td>
-      <td><select data-mat="${m.id}" data-field="status" aria-label="Status" ${dis}>${STATUSES.map(s => `<option ${s===r.status?"selected":""}>${s}</option>`).join("")}</select></td>
-      <td><input type="text" value="${esc(r.note)}" data-mat="${m.id}" data-field="note" aria-label="Notes" ${dis}></td>
-      <td>${m.custom && !readOnly ? `<button class="xbtn" data-remove-mat="${m.id}">Remove</button>` : ""}</td>
+      <td>${nameCell}</td>
+      <td>${linkCell}</td>
+      <td class="num">${planCell}</td>
+      <td><input type="number" step="0.01" min="0" value="${esc(r.actual)}" data-mat="${m.id}" data-field="actual" aria-label="Actual cost"></td>
+      <td><select data-mat="${m.id}" data-field="status" aria-label="Status">${STATUSES.map(s => `<option ${s===r.status?"selected":""}>${s}</option>`).join("")}</select></td>
+      <td><input type="text" value="${esc(r.note)}" data-mat="${m.id}" data-field="note" aria-label="Notes"></td>
+      <td>${editing || m.custom ? `<button class="xbtn" data-del="mat:${m.id}">Remove</button>` : ""}</td>
     </tr>`;
   }).join("");
   return `<h2>Materials and budget</h2>
   <p class="lede">Items from Cristian’s parts list, plus items marked “Added” that the proposal mentions or the design will likely need. Planned prices for added items are rough estimates.</p>
+  ${editHint()}
   <div class="tablewrap"><table>
     <thead><tr><th>Item</th><th>Link</th><th class="num">Planned</th><th>Actual $</th><th>Status</th><th>Notes</th><th></th></tr></thead>
     <tbody>${rows}</tbody>
     <tfoot><tr><td colspan="2">Totals (proposal estimate: $130–200)</td><td class="num">${money(planned)}</td><td class="num">${money(actual)}</td><td colspan="3"></td></tr></tfoot>
   </table></div>
-  ${readOnly ? "" : `<div class="panel section">
+  <div class="panel section">
     <h3>Add an item</h3>
     <div class="form">
       <div class="wide"><label for="nmName">Item</label><input type="text" id="nmName"></div>
@@ -875,7 +1102,7 @@ function vMaterials(){
       <div><label for="nmCost">Planned cost</label><input type="number" id="nmCost" step="0.01" min="0"></div>
       <div><button class="btn" data-action="addMat">Add item</button></div>
     </div>
-  </div>`}`;
+  </div>`;
 }
 
 function calcResults(){
@@ -920,30 +1147,7 @@ function vDesign(){
 
   <div class="panel section">
     <h3>Push-push layout</h3>
-    <svg class="schem" viewBox="0 0 720 210" role="img" aria-label="Diagram: input syringe pushed by a body motion sends fluid through tubing to an output syringe on the wrist, whose plunger pushes a lever that pulls a string along the finger.">
-      <rect x="20" y="90" width="150" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <rect x="22" y="92" width="96" height="30" fill="var(--fluid-soft)"/>
-      <rect x="118" y="92" width="6" height="30" fill="var(--ink)"/>
-      <line x1="124" y1="107" x2="200" y2="107" stroke="var(--ink)" stroke-width="3"/>
-      <path d="M222 96 l-16 11 l16 11" fill="none" stroke="var(--orange)" stroke-width="3"/>
-      <text x="20" y="80">Input syringe (pushed)</text>
-      <text x="170" y="146">body motion pushes here</text>
-      <path d="M20 107 C -10 107, 0 30, 120 30 L 430 30 C 500 30, 500 107, 470 107" fill="none" stroke="var(--fluid)" stroke-width="5"/>
-      <text x="250" y="22">Fluid-filled tubing</text>
-      <rect x="350" y="90" width="120" height="34" rx="3" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <rect x="400" y="92" width="68" height="30" fill="var(--fluid-soft)"/>
-      <rect x="394" y="92" width="6" height="30" fill="var(--ink)"/>
-      <line x1="394" y1="107" x2="330" y2="107" stroke="var(--ink)" stroke-width="3"/>
-      <text x="350" y="146">Output syringe (pushes out)</text>
-      <circle cx="320" cy="107" r="12" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <text x="268" y="176">pulley or lever</text>
-      <path d="M320 95 L 560 95 Q 640 95 690 140" fill="none" stroke="var(--orange)" stroke-width="2.5" stroke-dasharray="6 4"/>
-      <circle cx="560" cy="95" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <circle cx="630" cy="104" r="5" fill="none" stroke="var(--ink)" stroke-width="2"/>
-      <circle cx="690" cy="140" r="5" fill="var(--ink)"/>
-      <text x="540" y="76">Tendon string through guides</text>
-      <text x="615" y="168">fingertip anchor</text>
-    </svg>
+    ${SCHEMATIC}
     <p class="small muted">Layout is illustrative; where the input is mounted depends on the energy source chosen above.</p>
   </div>
 
@@ -1032,19 +1236,200 @@ function vTesting(){
   </div>`;
 }
 
+const QNAMES = {S:"Strengths", W:"Weaknesses", O:"Opportunities", T:"Threats"};
 function vSwot(){
-  const q = (k, name, neg) => `<div class="${neg?"neg":""}"><h3><span class="letter">${k}</span>${name}</h3><ul>${SWOT[k].map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>`;
+  const sw = C().swot;
+  const quad = (k, neg) => `<div class="${neg?"neg":""}"><h3><span class="letter">${k}</span>${QNAMES[k]}</h3>
+    ${editing ? `<div class="edit-list">${sw[k].map(it => `<div class="edit-row"><textarea rows="2" data-edit="swot:${k}:${esc(it.id)}" aria-label="${QNAMES[k]} item">${esc(it.text)}</textarea><button class="xbtn" data-del="swot:${k}:${esc(it.id)}">Remove</button></div>`).join("")}
+      <div class="addrow"><input type="text" data-addinput="swot:${k}" placeholder="Add to ${QNAMES[k].toLowerCase()}" aria-label="New ${QNAMES[k]} item"><button class="btn ghost" data-add="swot:${k}">Add</button></div></div>`
+    : (sw[k].length ? `<ul>${sw[k].map(it => `<li>${esc(it.text)}</li>`).join("")}</ul>` : `<p class="muted small">Nothing here yet.</p>`)}
+  </div>`;
+  const suggEdit = s => `<div class="sugg-edit">
+      <input type="text" data-edit="sugg:${esc(s.id)}:text" value="${esc(s.text)}" aria-label="Suggestion">
+      <textarea rows="2" data-edit="sugg:${esc(s.id)}:why" aria-label="Explanation">${esc(s.why)}</textarea>
+      <div class="row"><label class="inline small"><input type="checkbox" data-edit="sugg:${esc(s.id)}:top" ${s.top?"checked":""}> Do first</label><button class="xbtn" data-del="sugg:${esc(s.id)}">Remove</button></div>
+    </div>`;
+  const list = C().sugg;
   return `<h2>SWOT and advice</h2>
-  <p class="lede">A review of the proposal and parts list. This is a learning project, so treat these as pointers, not requirements.</p>
-  <div class="swot">${q("S","Strengths")}${q("W","Weaknesses",true)}${q("O","Opportunities")}${q("T","Threats",true)}</div>
+  <p class="lede">A review of the proposal and parts list. Turn on editing to rewrite, add or remove items as you discuss them.</p>
+  ${editHint()}
+  <div class="swot">${quad("S")}${quad("W",true)}${quad("O")}${quad("T",true)}</div>
   <div class="grid g2 section">
-    <div class="panel"><h3>Do these first</h3>${SUGGESTIONS.filter(s=>s.top).map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}</div>
-    <div class="panel"><h3>When you get there</h3>${SUGGESTIONS.filter(s=>!s.top).map(s => checkRow("sugg:"+s.id, s.text, s.why)).join("")}</div>
+    <div class="panel"><h3>Do these first</h3>${list.filter(s=>s.top).map(s => editing ? suggEdit(s) : checkRow("sugg:"+s.id, s.text, s.why)).join("") || `<p class="muted small">None marked.</p>`}</div>
+    <div class="panel"><h3>When you get there</h3>${list.filter(s=>!s.top).map(s => editing ? suggEdit(s) : checkRow("sugg:"+s.id, s.text, s.why)).join("") || `<p class="muted small">None.</p>`}</div>
   </div>
+  ${editing ? `<div class="panel section"><h3>Add a suggestion</h3><div class="form">
+    <div class="wide"><label for="nsText">Suggestion</label><input type="text" id="nsText"></div>
+    <div class="wide"><label for="nsWhy">Why it matters (optional)</label><input type="text" id="nsWhy"></div>
+    <div><label class="inline small"><input type="checkbox" id="nsTop"> Do first</label></div>
+    <div><button class="btn" data-action="addSugg">Add suggestion</button></div>
+  </div></div>` : ""}
   <div class="section">
     <h3>Sources from the proposal</h3>
     <ul class="refs">${REFS.map(r => `<li>${esc(r)}</li>`).join("")}</ul>
   </div>`;
+}
+
+/* ---------- Presentation ---------- */
+const bullets = (s, cls) => { const L = lines(s); return L.length ? `<ul class="${cls||""}">${L.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""; };
+const slideFoot = (n, total) => `<div class="s-foot"><span>${esc(C().summary.title)}</span><span>${n} / ${total}</span></div>`;
+
+const SLIDES = [
+  {id:"title", name:"Title", fields:[["event","Event"],["date","Date"]], build: () => {
+    const P = C().pres;
+    return `<div class="s-titlewrap"><div class="s-bar"></div>
+      <h1 class="s-h1">${esc(C().summary.title)}</h1>
+      <p class="s-by">Cristian Fama</p>
+      <p class="s-meta">Faculty advisor: Michael Qaissaunee<br>Brookdale Community College</p>
+      <p class="s-meta s-event">${esc([P.event, P.date].filter(Boolean).join(" · "))}</p></div>`;
+  }, cls:"s-title"},
+  {id:"problem", name:"The problem", fields:[["facts","Key facts (one per line)"]], build: () => `
+    <h2 class="s-h2">The problem</h2>
+    <div class="s-cols"><p class="s-lead">${esc(C().summary.problem)}</p>${bullets(C().pres.facts,"s-list")}</div>`},
+  {id:"prior", name:"Prior work", fields:[["prior","Points (one per line)"]], build: () => `
+    <h2 class="s-h2">What NASA has tried</h2>${bullets(C().pres.prior,"s-list s-big")}`},
+  {id:"goal", name:"Goal and approach", fields:[], build: () => `
+    <h2 class="s-h2">Goal and approach</h2>
+    <p class="s-goal">${esc(C().summary.goal)}</p>
+    <p class="s-body">${esc(C().summary.approach)}</p>
+    <div class="s-conds">${CONDITIONS.slice(0,3).map(c => `<div><b>${c.id}</b>${esc(c.name)}</div>`).join("")}</div>`},
+  {id:"design", name:"Prototype design", fields:[["design","Design decisions (one per line)"]], build: () => `
+    <h2 class="s-h2">Prototype design</h2>
+    <div class="s-fig">${SCHEMATIC}</div>${bullets(C().pres.design,"s-list s-two") || `<p class="s-placeholder">Add design decisions: where the assist energy comes from, syringe sizes, string routing.</p>`}`},
+  {id:"progress", name:"Progress", fields:[], build: () => {
+    const st = stats();
+    const done = PHASES.filter(p => phaseStatus(p, st.wk) === "done").map(ptitle);
+    return `<h2 class="s-h2">Progress</h2>
+      <div class="s-stats"><div><b>${st.pct}%</b>of tasks done</div><div><b>${Math.min(Math.max(st.wk,1),TOTAL_WEEKS)}</b>of ${TOTAL_WEEKS} weeks</div><div><b>${done.length}</b>of ${PHASES.length} phases complete</div></div>
+      <div class="s-timeline">${PHASES.map((p,i) => { const [d,n] = phaseDone(p); return `<div style="flex:${p.e - p.s + 1}"><span class="s-tfill" style="width:${n?d/n*100:0}%"></span><i>${i+1}</i></div>`; }).join("")}</div>
+      ${done.length ? `<p class="s-body">Completed: ${esc(done.join("; "))}</p>` : `<p class="s-body">Current phase: ${esc(PHASES.filter(p => st.wk >= p.s && st.wk <= p.e).map(ptitle).join("; ") || "—")}</p>`}`;
+  }},
+  {id:"materials", name:"Materials and budget", fields:[], build: () => {
+    const st = stats();
+    const rec = st.mats.filter(m => matRow(m).status === "Received").slice(0,8);
+    return `<h2 class="s-h2">Materials and budget</h2>
+      <div class="s-stats"><div><b>${money(st.planned)}</b>planned</div><div><b>${money(st.spent)}</b>spent</div><div><b>${st.received}/${st.mats.length}</b>items received</div></div>
+      ${rec.length ? `<ul class="s-list s-two">${rec.map(m => `<li>${esc(m.name)}</li>`).join("")}</ul>` : `<p class="s-body">Proposal estimate: $130–200, funded personally.</p>`}`;
+  }},
+  {id:"results", name:"Test results", fields:[], build: () => {
+    const ts = trialSummary();
+    const has = ts.byCond.filter(x => x.n);
+    if (!has.length && !ts.benchN) return `<h2 class="s-h2">Test results</h2><p class="s-lead">Experimental trials are scheduled for weeks 26–29. Results will compare a bare hand, the glove with bands, and the glove with bands plus the hydraulic assist.</p>`;
+    const max = Math.max(...has.map(x => Number.isFinite(x.grip) ? x.grip : 0), 1);
+    return `<h2 class="s-h2">Test results</h2>
+      <div class="s-bars">${has.map(x => `<div class="s-barrow"><span>${esc(x.c.name)}</span><div><i style="width:${(Number.isFinite(x.grip)?x.grip/max*100:0)}%"></i></div><b>${fmt(x.grip)} lb</b></div>`).join("")}</div>
+      <p class="s-body">Average max grip by condition${Number.isFinite(ts.bare) ? ", with glove conditions at " + has.slice(1).map(x => Number.isFinite(x.grip) ? fmt(x.grip/ts.bare*100,0) + "%" : "–").join(" and ") + " of bare hand" : ""}. ${ts.benchN ? `Bench tests: force to close the glove changed by ${fmt(ts.benchAvg,0)}% on average with the assist on (${ts.benchN} measurement${ts.benchN>1?"s":""}).` : ""}</p>`;
+  }},
+  {id:"swot", name:"SWOT", fields:[], build: () => {
+    const sw = C().swot;
+    return `<h2 class="s-h2" style="margin-bottom:1.6cqw">SWOT analysis</h2><div class="s-swot">${["S","W","O","T"].map(k => `<div class="${k==="W"||k==="T"?"neg":""}"><h3>${QNAMES[k]}</h3><ul>${sw[k].slice(0,4).map(it => `<li>${esc(it.text)}</li>`).join("")}</ul></div>`).join("")}</div>`;
+  }},
+  {id:"next", name:"Challenges and next steps", fields:[["challenges","Challenges (one per line)"],["next","Next steps (one per line; blank uses upcoming phases)"]], build: () => {
+    const P = C().pres, wk = currentWeek();
+    const upcoming = PHASES.filter(p => phaseStatus(p, wk) !== "done" && p.e >= wk).slice(0,4).map(p => `Weeks ${p.s}–${p.e}: ${ptitle(p)}`).join("\n");
+    return `<h2 class="s-h2">Challenges and next steps</h2>
+      <div class="s-cols"><div><h3 class="s-h3">Challenges</h3>${bullets(P.challenges,"s-list") || `<p class="s-placeholder">Add the challenges you ran into.</p>`}</div>
+      <div><h3 class="s-h3">Next steps</h3>${bullets(P.next || upcoming,"s-list")}</div></div>`;
+  }},
+  {id:"conclusions", name:"Conclusions and limitations", fields:[["conclusions","Conclusions (one per line)"],["limitations","Limitations (one per line)"]], build: () => {
+    const P = C().pres;
+    return `<h2 class="s-h2">Conclusions and limitations</h2>
+      <div class="s-cols"><div><h3 class="s-h3">Conclusions</h3>${bullets(P.conclusions,"s-list") || `<p class="s-placeholder">Add conclusions once results are in.</p>`}</div>
+      <div><h3 class="s-h3">Limitations</h3>${bullets(P.limitations,"s-list")}</div></div>`;
+  }},
+  {id:"refs", name:"References", fields:[], build: () => `<h2 class="s-h2">References</h2><ul class="s-refs">${REFS.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`},
+  {id:"thanks", name:"Questions", fields:[["thanks","Acknowledgments (one per line)"]], build: () => `
+    <div class="s-titlewrap"><div class="s-bar"></div><h1 class="s-h1">Questions?</h1>${lines(C().pres.thanks).length ? `<p class="s-meta">Thank you to</p>${bullets(C().pres.thanks,"s-thanks")}` : ""}</div>`, cls:"s-title"}
+];
+function visibleSlides(){ return SLIDES.filter(s => !C().pres.hidden[s.id]); }
+function slideHTML(s, n, total){
+  return `<div class="slide ${s.cls||""}"><div class="s-inner">${s.build()}</div>${s.cls ? "" : slideFoot(n, total)}</div>`;
+}
+
+function vPresent(){
+  const vis = visibleSlides();
+  let n = 0;
+  return `<h2>Presentation</h2>
+  <p class="lede">Slides built from everything in the tracker. They update as the project moves along. Add the text only Cristian can supply under each slide, hide slides you don’t need, and present here or save as a PDF.</p>
+  <div class="pres-tools">
+    <button class="btn" data-action="present">Present</button>
+    <button class="btn ghost" data-action="print">Print or save as PDF</button>
+    <span class="small muted">${vis.length} of ${SLIDES.length} slides included · Arrow keys move between slides, Esc exits, N shows notes.</span>
+  </div>
+  <div class="slide-list">${SLIDES.map(s => {
+    const on = !C().pres.hidden[s.id];
+    if (on) n++;
+    const P = C().pres;
+    return `<div class="slide-item ${on?"":"off"}">
+      <div class="slide-head">
+        <label class="inline"><input type="checkbox" data-edit="slideOn:${s.id}" ${on?"checked":""}> <strong>${esc(s.name)}</strong></label>
+        ${on ? `<span class="small muted">Slide ${n}</span>` : `<span class="small muted">Hidden</span>`}
+      </div>
+      ${on ? `<div class="slide-thumb">${slideHTML(s, n, vis.length)}</div>` : ""}
+      ${on ? `<div class="slide-fields">
+        ${s.fields.map(([f,label]) => `<div><label>${esc(label)}</label>${f==="event"||f==="date" ? `<input type="text" data-edit="pres:${f}" value="${esc(P[f])}">` : `<textarea rows="3" data-edit="pres:${f}">${esc(P[f])}</textarea>`}</div>`).join("")}
+        ${s.id==="problem"||s.id==="goal" ? `<p class="small muted">The project summary on this slide is edited on the Overview tab.</p>` : ""}
+        ${s.id==="swot" ? `<p class="small muted">Shows up to four items per box from the SWOT tab.</p>` : ""}
+        <div><label>Speaker notes</label><textarea rows="2" data-edit="note:${s.id}" placeholder="What to say on this slide">${esc(P.notes[s.id] || "")}</textarea></div>
+      </div>` : ""}
+    </div>`;
+  }).join("")}</div>`;
+}
+
+/* Presenter */
+let pIndex = 0, pNotes = false;
+const presenter = document.getElementById("presenter");
+function openPresenter(){
+  pIndex = 0; pNotes = false;
+  presenter.hidden = false;
+  drawPresenter();
+  try { if (presenter.requestFullscreen) presenter.requestFullscreen().catch(() => {}); } catch(e){}
+  presenter.focus();
+}
+function closePresenter(){
+  presenter.hidden = true;
+  try { if (document.fullscreenElement) document.exitFullscreen(); } catch(e){}
+}
+function drawPresenter(){
+  const vis = visibleSlides();
+  if (!vis.length){ closePresenter(); return; }
+  pIndex = Math.max(0, Math.min(pIndex, vis.length - 1));
+  const s = vis[pIndex];
+  document.getElementById("pstage").innerHTML = slideHTML(s, pIndex + 1, vis.length);
+  document.getElementById("pcount").textContent = `${pIndex + 1} / ${vis.length}`;
+  const notes = document.getElementById("pnotes");
+  notes.hidden = !pNotes;
+  notes.textContent = C().pres.notes[s.id] || "No notes for this slide.";
+}
+document.getElementById("pPrev").addEventListener("click", () => { pIndex--; drawPresenter(); });
+document.getElementById("pNext").addEventListener("click", () => { pIndex++; drawPresenter(); });
+document.getElementById("pClose").addEventListener("click", closePresenter);
+document.getElementById("pNotesBtn").addEventListener("click", () => { pNotes = !pNotes; drawPresenter(); });
+document.getElementById("pstage").addEventListener("click", e => {
+  const r = e.currentTarget.getBoundingClientRect();
+  if (e.clientX - r.left < r.width / 3) pIndex--; else pIndex++;
+  drawPresenter();
+});
+document.addEventListener("fullscreenchange", () => { if (!document.fullscreenElement && !presenter.hidden){ /* stay open in window */ } });
+document.addEventListener("keydown", e => {
+  if (presenter.hidden) return;
+  if (["ArrowRight","PageDown"," ","Enter"].includes(e.key)){ e.preventDefault(); pIndex++; drawPresenter(); }
+  else if (["ArrowLeft","PageUp","Backspace"].includes(e.key)){ e.preventDefault(); pIndex--; drawPresenter(); }
+  else if (e.key === "Home"){ pIndex = 0; drawPresenter(); }
+  else if (e.key === "End"){ pIndex = 1e6; drawPresenter(); }
+  else if (e.key === "Escape"){ closePresenter(); }
+  else if (e.key.toLowerCase() === "n"){ pNotes = !pNotes; drawPresenter(); }
+});
+
+function printDeck(){
+  const vis = visibleSlides();
+  let deck = document.getElementById("printdeck");
+  if (!deck){ deck = document.createElement("div"); deck.id = "printdeck"; document.body.appendChild(deck); }
+  deck.innerHTML = vis.map((s,i) => slideHTML(s, i+1, vis.length)).join("");
+  document.body.classList.add("printing");
+  const done = () => { document.body.classList.remove("printing"); deck.innerHTML = ""; window.removeEventListener("afterprint", done); };
+  window.addEventListener("afterprint", done);
+  setTimeout(() => window.print(), 50);
 }
 
 function vNotes(){
@@ -1066,7 +1451,7 @@ function vNotes(){
 /* ---------- Render ---------- */
 function render(){
   renderHeader(); renderTabs();
-  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes};
+  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, present:vPresent};
   document.getElementById("main").innerHTML = (views[currentTab] || vOverview)();
 }
 function requestRender(){
@@ -1167,6 +1552,86 @@ function addTask(pid){
   renderPending = false; render();
   const again = document.querySelector(`[data-newtask="${pid}"]`); if (again) again.focus();
 }
+
+/* ---------- Content editing ---------- */
+function applyEdit(s, key, v){
+  const [kind, a, b] = key.split(":");
+  const c = s.content;
+  switch(kind){
+    case "summary": c.summary[a] = v; break;
+    case "phase": if (v.trim()) c.phaseTitle[a] = v; else delete c.phaseTitle[a]; break;
+    case "task": {
+      const list = s.progress.custom[a] || [];
+      const item = list.find(x => x.id === b);
+      if (item) item.text = v; else c.taskText[b] = v;
+      break;
+    }
+    case "mat": {
+      const val2 = b === "planned" ? (v === "" ? 0 : Number(v)) : v;
+      const item = (s.materials.custom || []).find(x => x.id === a);
+      if (item) item[b] = val2;
+      else { const o = s.materials.items[a] = s.materials.items[a] || {}; o[b] = val2; }
+      break;
+    }
+    case "swot": { const it = (c.swot[a] || []).find(x => x.id === b); if (it) it.text = v; break; }
+    case "sugg": { const it = c.sugg.find(x => x.id === a); if (it) it[b] = v; break; }
+    case "slideOn": if (v) delete c.pres.hidden[a]; else c.pres.hidden[a] = true; break;
+    case "pres": c.pres[a] = v; break;
+    case "note": c.pres.notes[a] = v; break;
+  }
+}
+function applyDelete(s, key){
+  const [kind, a, b] = key.split(":");
+  const c = s.content;
+  if (kind === "task"){
+    const list = s.progress.custom[a] || [];
+    if (list.some(x => x.id === b)) s.progress.custom[a] = list.filter(x => x.id !== b);
+    else c.taskHidden[b] = true;
+    delete s.progress.tasks[b];
+  } else if (kind === "mat"){
+    if ((s.materials.custom || []).some(x => x.id === a)){ s.materials.custom = s.materials.custom.filter(x => x.id !== a); delete s.materials.items[a]; }
+    else { const o = s.materials.items[a] = s.materials.items[a] || {}; o.hidden = true; }
+  } else if (kind === "swot"){
+    c.swot[a] = (c.swot[a] || []).filter(x => x.id !== b);
+  } else if (kind === "sugg"){
+    c.sugg = c.sugg.filter(x => x.id !== a); delete s.progress.sugg[a];
+  }
+}
+main.addEventListener("change", e => {
+  const el = e.target;
+  if (!el.dataset.edit) return;
+  e.stopImmediatePropagation();
+  const key = el.dataset.edit, v = el.type === "checkbox" ? el.checked : el.value;
+  mutate(s => applyEdit(s, key, v));
+  if (el.type === "checkbox") render(); else requestRender();
+}, true);
+main.addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.del){ const key = t.dataset.del; mutate(s => applyDelete(s, key)); render(); return; }
+  if (t.dataset.add){
+    const key = t.dataset.add, input = document.querySelector(`[data-addinput="${key}"]`);
+    const text = input ? input.value.trim() : ""; if (!text){ if (input) input.focus(); return; }
+    const q = key.split(":")[1], item = {id:q + uid(), text};
+    mutate(s => { (s.content.swot[q] = s.content.swot[q] || []).push(clone(item)); });
+    renderPending = false; render();
+    const again = document.querySelector(`[data-addinput="${key}"]`); if (again) again.focus();
+    return;
+  }
+  const a = t.dataset.action;
+  if (a === "addSugg"){
+    const text = val("nsText"); if (!text){ document.getElementById("nsText").focus(); return; }
+    const item = {id:"s" + uid(), text, why:val("nsWhy"), top:document.getElementById("nsTop").checked};
+    mutate(s => s.content.sugg.push(clone(item))); render();
+  } else if (a === "present"){ openPresenter(); }
+  else if (a === "print"){ printDeck(); }
+});
+main.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.dataset.addinput){
+    e.preventDefault();
+    const b = document.querySelector(`[data-add="${e.target.dataset.addinput}"]`); if (b) b.click();
+  }
+});
+document.getElementById("editToggle").addEventListener("click", () => { editing = !editing; renderPending = false; render(); });
 
 /* Export / import / sign out */
 document.getElementById("exportBtn").addEventListener("click", () => {

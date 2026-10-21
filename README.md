@@ -8,6 +8,12 @@ A single-page tracker for Cristian Fama's passive hydraulic grip-assistance proj
 - `access.json` — created by setup; holds the GitHub token encrypted separately with each person's password
 - `data.json` — created by setup; all tracker data. Every save is a commit, so the history is the version log.
 
+## Using it
+
+- **Edit content** (top right) turns on editing for the project summary, task and phase names, the materials list, the SWOT, and the suggestions. Changes save when you leave a field.
+- **Presentation** builds slides from everything in the tracker. Add Cristian's own text (design decisions, challenges, conclusions) and speaker notes under each slide, hide slides you don't need, then **Present** (arrow keys, Esc to exit, N for notes) or **Print or save as PDF** (choose "Save as PDF" in the print dialog; one slide per page).
+- Existing data from earlier versions carries over; the new content is added the first time someone edits it.
+
 ## One-time setup
 
 1. Put `index.html` in a dedicated repository (for example `eva-glove-tracker`) and turn on GitHub Pages (Settings → Pages → deploy from branch `main`, folder `/`).
