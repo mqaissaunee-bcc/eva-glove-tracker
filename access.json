@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "owner": "mqaissaunee-bcc",
+  "repo": "eva-glove-tracker",
+  "branch": "main",
+  "dataPath": "data.json",
+  "iterations": 600000,
+  "users": [
+    {
+      "name": "Prof. Qaissaunee",
+      "role": "advisor",
+      "salt": "IpnG5t8up0WnyQbBCUqVlQ==",
+      "iv": "/BPYn6BWyO3FxQzf",
+      "ct": "30WsNvGOyQ29qFD3kguhnpYtaj0iBJuLUAfovs0Yh4OYOLfzoniXTLDT5Ovbkn/63WNZfyYz10QHKNXgtxbBY17CG2bzU6e+cD/qjVAyC79kjm6Y9qeE2L6gtYxLNAAymTixV3CYs9vbw6AFgA=="
+    },
+    {
+      "name": "Cristian",
+      "role": "student",
+      "salt": "PojgiWLlWJvKxZfLumBr6g==",
+      "iv": "8+D3f61Mb44CwAZo",
+      "ct": "WxUFeFmMaM4sDdR0HJz1xCoPppxnVluuym37+Zu92uUFgr+SwP7oTKbPV/4gEzAY1gzx4JTTq4uoTGHSCRUX7LenS5efxAikzMBNWTisDc84+/Qy4gQ9FWAItPvzuff3KorlD3AqS4Z2NJxNmA=="
+    }
+  ],
+  "created": "2026-10-21T15:25:47.153Z"
+}
