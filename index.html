@@ -186,6 +186,21 @@ a.btn{text-decoration:none;display:inline-block}
 label.inline{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 td input.mt{margin-top:6px}
 
+/* Schedule */
+.ms{position:absolute;top:4px;width:12px;height:12px;margin-left:-6px;background:var(--surface);border:2px solid var(--ink);transform:rotate(45deg);z-index:2}
+.nextms{display:block;color:var(--orange-text);font-size:.85rem}
+.ms-row{display:grid;grid-template-columns:120px 1fr auto;gap:10px;padding:7px 0;border-top:1px solid var(--rule);align-items:baseline}
+.ms-row:first-of-type{border-top:0}
+.ms-row.past{color:var(--muted)}
+.ms-date{font-weight:600}
+.phase .wk small+small{margin-top:2px}
+.wk-edit{display:block;font-family:var(--body);font-weight:500;font-size:.78rem;color:var(--muted);margin-top:8px}
+.wk-edit input{margin-top:2px;font-size:.85rem;padding:5px 6px}
+.phase{grid-template-columns:150px 1fr}
+@media (max-width:620px){.phase{grid-template-columns:1fr}}
+.readout{padding:7px 0;font-weight:600}
+#settingsBtn[aria-pressed="true"]{border-color:var(--ink)}
+
 /* Glossary */
 dl.gl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
 .gl-item{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}
@@ -299,9 +314,9 @@ footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
     <div class="title-row">
       <div>
         <h1 id="ptitle">Passive hydraulic grip assistance for EVA gloves</h1>
-        <p class="byline">Cristian Fama, investigator · Michael Qaissaunee, faculty advisor · September 2026 to May 2027</p>
+        <p class="byline" id="byline"></p>
       </div>
-      <div class="sync" id="sync"><span class="dot" id="syncdot"></span><span id="synctext">Loading…</span><span class="sep">|</span><span id="who"></span><button class="xbtn" id="signout">Sign out</button><button class="btn ghost small-btn" id="editToggle" aria-pressed="false">Edit content</button></div>
+      <div class="sync" id="sync"><span class="dot" id="syncdot"></span><span id="synctext">Loading…</span><span class="sep">|</span><span id="who"></span><button class="xbtn" id="signout">Sign out</button><button class="btn ghost small-btn" id="editToggle" aria-pressed="false">Edit content</button><button class="btn ghost small-btn" id="settingsBtn">Settings</button></div>
     </div>
     <div class="strip" aria-label="Project timeline">
       <div class="strip-head">
@@ -309,7 +324,7 @@ footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
         <div class="phase-now" id="phasenow"></div>
       </div>
       <div class="track" id="track"></div>
-      <div class="weekscale"><span>Week 1</span><span>Week 11</span><span>Week 22</span><span>Week 33</span></div>
+      <div class="weekscale" id="weekscale"></div>
     </div>
     <div class="banner" id="banner"></div>
     <nav class="tabs" role="tablist" id="tabs"></nav>
@@ -337,8 +352,7 @@ footer .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-cont
 "use strict";
 
 /* ---------- Static project content ---------- */
-const TOTAL_WEEKS = 33;
-const PHASES = [
+const PHASES_BASE = [
   {id:"p1", s:1, e:3, title:"Gather materials and kick off", tasks:[
     ["t1a","Order everything on the materials list"],
     ["t1b","Meet with mentor about prototype design and objectives"],
@@ -875,12 +889,13 @@ function contentDefaults(){
       title:"Passive hydraulic grip assistance for EVA gloves",
       problem:"Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. Repetitive gripping is among the most fatiguing parts of a spacewalk, and Artemis missions will ask for more EVA hours than Apollo did.",
       approach:"A glove with rubber bands on the back stands in for a pressurized glove. A passive hydraulic system — syringes, fluid-filled tubing and tendon strings — is added to assist finger flexion without motors or electronics. Hand performance and perceived effort are compared with a bare hand, the glove with bands, and the glove with bands plus the assist.",
-      goal:"Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand."
+      goal:"Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand.",
+      investigator:"Cristian Fama", advisor:"Michael Qaissaunee", school:"Brookdale Community College"
     },
     swot:{S:SWOT.S.map((t,i)=>({id:"S"+i,text:t})), W:SWOT.W.map((t,i)=>({id:"W"+i,text:t})), O:SWOT.O.map((t,i)=>({id:"O"+i,text:t})), T:SWOT.T.map((t,i)=>({id:"T"+i,text:t}))},
     sugg:SUGGESTIONS.map(s => Object.assign({}, s)),
     glossary:GLOSSARY.map(g => Object.assign({done:false}, g)),
-    taskText:{}, taskHidden:{}, phaseTitle:{},
+    taskText:{}, taskHidden:{}, phaseTitle:{}, phaseWeeks:{}, milestones:[],
     pres:{
       event:"End-of-semester presentation", date:"December 2026",
       facts:"Grip strength in a pressurized glove drops to 46–58% of bare-hand strength (Mesloh et al.)\nMost spacewalks last 5 to 8 hours\nArtemis plans up to 24 hours of surface EVA per crewmember per week (Estep et al.)\nGlove-related hand injuries have been reported throughout NASA’s history (McFarland et al.)",
@@ -901,7 +916,8 @@ function fillContent(c){
   ["S","W","O","T"].forEach(k => { if (!Array.isArray(o.swot[k])) o.swot[k] = []; });
   if (!Array.isArray(o.sugg)) o.sugg = contentDefaults().sugg;
   if (!Array.isArray(o.glossary)) o.glossary = contentDefaults().glossary;
-  ["taskText","taskHidden","phaseTitle"].forEach(k => { if (!o[k] || typeof o[k] !== "object") o[k] = {}; });
+  if (!Array.isArray(o.milestones)) o.milestones = [];
+  ["taskText","taskHidden","phaseTitle","phaseWeeks"].forEach(k => { if (!o[k] || typeof o[k] !== "object") o[k] = {}; });
   o.pres = Object.assign(contentDefaults().pres, c.pres || {});
   if (!o.pres.hidden || typeof o.pres.hidden !== "object") o.pres.hidden = {};
   if (!o.pres.notes || typeof o.pres.notes !== "object") o.pres.notes = {};
@@ -909,6 +925,25 @@ function fillContent(c){
 }
 const lines = s => String(s || "").split("\n").map(x => x.trim()).filter(Boolean);
 const C = () => state.content;
+
+/* ---------- Schedule ---------- */
+const DAY = 86400000;
+function PH(){
+  const o = (state.content && state.content.phaseWeeks) || {};
+  return PHASES_BASE.map(p => { const w = o[p.id]; return w ? Object.assign({}, p, {s:w.s, e:w.e}) : p; });
+}
+function TW(){ return Math.max(1, ...PH().map(p => p.e)); }
+function startOf(s){ const d = new Date(((s || state).progress.start || "2026-09-02") + "T00:00:00"); return isNaN(d) ? new Date("2026-09-02T00:00:00") : d; }
+const weekStart = w => new Date(startOf().getTime() + (w - 1) * 7 * DAY);
+const weekEnd = w => new Date(startOf().getTime() + (w * 7 - 1) * DAY);
+const iso = d => { const z = new Date(d.getTime() - d.getTimezoneOffset() * 60000); return z.toISOString().slice(0,10); };
+const fmtD = d => d.toLocaleDateString("en-US", {month:"short", day:"numeric"});
+const fmtDY = d => d.toLocaleDateString("en-US", {month:"short", day:"numeric", year:"numeric"});
+const monthYear = d => d.toLocaleDateString("en-US", {month:"long", year:"numeric"});
+const phaseDates = p => `${fmtD(weekStart(p.s))} – ${fmtD(weekEnd(p.e))}`;
+function dateToWeek(str, s){ const d = new Date(str + "T00:00:00"); if (isNaN(d)) return null; return Math.floor((d - startOf(s)) / (7 * DAY)) + 1; }
+function milestones(){ return (C().milestones || []).filter(m => m.date).slice().sort((a,b) => a.date.localeCompare(b.date)); }
+function daysUntil(str){ const d = new Date(str + "T00:00:00"); const t = new Date(); t.setHours(0,0,0,0); return Math.round((d - t) / DAY); }
 
 /* ---------- Derived values ---------- */
 function currentWeek(){
@@ -950,7 +985,7 @@ function allMaterials(){
 function stats(){
   const wk = currentWeek();
   let done = 0, total = 0;
-  PHASES.forEach(p => { const [d,n] = phaseDone(p); done += d; total += n; });
+  PH().forEach(p => { const [d,n] = phaseDone(p); done += d; total += n; });
   const list = allMaterials();
   const mats = list.filter(m => matRow(m).status !== "Not needed");
   const received = mats.filter(m => matRow(m).status === "Received").length;
@@ -969,30 +1004,42 @@ function trialSummary(){
 /* ---------- Header ---------- */
 function renderHeader(){
   const wk = currentWeek();
-  document.getElementById("ptitle").textContent = C().summary.title;
-  const shown = Math.min(Math.max(wk,1), TOTAL_WEEKS);
-  document.getElementById("weeknum").innerHTML = wk < 1 ? "Not started" : (wk > TOTAL_WEEKS ? "Project complete" : `Week ${shown}<span>of ${TOTAL_WEEKS}</span>`);
-  const now = PHASES.filter(p => wk >= p.s && wk <= p.e).map(ptitle);
-  document.getElementById("phasenow").textContent = now.length ? "Now: " + now.join(" · ") : "";
+  const S = C().summary;
+  document.getElementById("ptitle").textContent = S.title;
+  document.getElementById("byline").textContent = `${S.investigator}, investigator · ${S.advisor}, faculty advisor · ${monthYear(startOf())} to ${monthYear(weekEnd(TW()))}`;
+  const T = TW(), q1 = Math.round(T/3), q2 = Math.round(2*T/3);
+  document.getElementById("weekscale").innerHTML = `<span>Week 1 · ${fmtD(startOf())}</span><span>Week ${q1}</span><span>Week ${q2}</span><span>Week ${T} · ${fmtD(weekEnd(T))}</span>`;
+  const shown = Math.min(Math.max(wk,1), TW());
+  document.getElementById("weeknum").innerHTML = wk < 1 ? "Not started" : (wk > TW() ? "Project complete" : `Week ${shown}<span>of ${TW()}</span>`);
+  const now = PH().filter(p => wk >= p.s && wk <= p.e).map(ptitle);
+  const nextM = milestones().find(m => daysUntil(m.date) >= 0);
+  document.getElementById("phasenow").innerHTML = (now.length ? esc("Now: " + now.join(" · ")) : "") + (nextM ? `<span class="nextms">Next milestone: ${esc(nextM.label)} · ${fmtD(new Date(nextM.date + "T00:00:00"))}</span>` : "");
   const track = document.getElementById("track");
   let html = "";
-  PHASES.forEach((p, i) => {
-    const left = (p.s - 1) / TOTAL_WEEKS * 100;
-    const nextStart = PHASES[i+1] ? PHASES[i+1].s - 1 : TOTAL_WEEKS;
-    const width = (Math.max(nextStart, p.s) - (p.s - 1)) / TOTAL_WEEKS * 100;
+  const sorted = PH().map((p,i) => Object.assign({n:i+1}, p)).sort((a,b) => a.s - b.s);
+  sorted.forEach((p, i) => {
+    const left = (p.s - 1) / TW() * 100;
+    const nextStart = sorted[i+1] ? sorted[i+1].s - 1 : TW();
+    const width = (Math.max(nextStart, p.s) - (p.s - 1)) / TW() * 100;
     const [d,n] = phaseDone(p);
     const pct = n ? d/n*100 : 0;
-    html += `<div class="seg" style="left:${left}%;width:${width}%" title="Weeks ${p.s}–${p.e}: ${esc(ptitle(p))} (${d}/${n} done)"><div class="fill" style="width:${pct}%"></div><span class="lbl">${i+1}</span></div>`;
+    html += `<div class="seg" style="left:${left}%;width:${width}%" title="Weeks ${p.s}–${p.e} (${phaseDates(p)}): ${esc(ptitle(p))} (${d}/${n} done)"><div class="fill" style="width:${pct}%"></div><span class="lbl">${p.n}</span></div>`;
   });
-  if (wk >= 1 && wk <= TOTAL_WEEKS){
-    const pos = ((wk - 0.5) / TOTAL_WEEKS) * 100;
+  if (wk >= 1 && wk <= TW()){
+    const pos = ((wk - 0.5) / TW()) * 100;
     html += `<div class="tick" style="left:${pos}%" aria-label="Current week"></div>`;
   }
+  milestones().forEach(m => {
+    const days = (new Date(m.date + "T00:00:00") - startOf()) / DAY;
+    if (days < 0 || days > T * 7) return;
+    html += `<div class="ms" style="left:${days / (T * 7) * 100}%" title="${esc(m.label)} · ${esc(fmtDY(new Date(m.date + "T00:00:00")))}"></div>`;
+  });
   track.innerHTML = html;
   const eb = document.getElementById("editToggle");
   eb.setAttribute("aria-pressed", String(editing));
   eb.textContent = editing ? "Done editing" : "Edit content";
   document.body.classList.toggle("editing", editing);
+  document.getElementById("settingsBtn").setAttribute("aria-pressed", String(currentTab === "settings"));
 }
 
 /* ---------- Tabs ---------- */
@@ -1011,8 +1058,8 @@ const editHint = () => editing ? `<p class="edit-hint">Editing is on. Changes sa
 function vOverview(){
   const st = stats(), wk = st.wk;
   const trials = state.logs.trials.length + state.logs.bench.length;
-  const nowPhases = PHASES.filter(p => wk >= p.s && wk <= p.e);
-  const behind = PHASES.filter(p => phaseStatus(p, wk) === "behind");
+  const nowPhases = PH().filter(p => wk >= p.s && wk <= p.e);
+  const behind = PH().filter(p => phaseStatus(p, wk) === "behind");
   const open = [];
   behind.concat(nowPhases).forEach(p => phaseTasks(p).forEach(t => { if (!state.progress.tasks[t[0]]) open.push([p, t]); }));
   const top = C().sugg.filter(s => s.top);
@@ -1051,11 +1098,8 @@ function vOverview(){
   <div class="section grid g2">
     <div>${summary}</div>
     <div class="panel flat">
-      <h3>Project settings</h3>
-      <div class="form">
-        <div><label for="startDate">Week 1 starts on</label><input type="date" id="startDate" data-setting="start" value="${esc(state.progress.start)}"></div>
-      </div>
-      <p class="small muted" style="margin-top:10px">The week counter and the “past its window” flags use this date.</p>
+      <h3>Milestones</h3>
+      ${(() => { const up = milestones().filter(m => daysUntil(m.date) >= 0).slice(0,4); return up.length ? up.map(m => { const n = daysUntil(m.date); return `<div class="ms-row"><span class="ms-date">${esc(fmtD(new Date(m.date + "T00:00:00")))}</span><span>${esc(m.label)}</span><span class="small muted">${n === 0 ? "today" : n === 1 ? "tomorrow" : "in " + n + " days"}</span></div>`; }).join("") : `<p class="small muted">No upcoming milestones. Add them on the Timeline tab.</p>`; })()}
       <h3 style="margin-top:16px">Measurements planned</h3>
       <p class="small">Maximum grip strength, repetitions against a set resistance, hold time, and perceived effort (0–10). Plus a bench test of the force needed to close the glove.</p>
     </div>
@@ -1085,13 +1129,22 @@ function vTimeline(){
   const wk = currentWeek();
   const labels = {done:"Done", now:"This week", behind:"Past its window", later:""};
   return `<h2>Timeline</h2>
-  <p class="lede">The proposal’s ten phases, with tasks from the proposal and the advisor’s suggestions. Add your own tasks to any phase, or turn on editing to reword or remove tasks.</p>
+  <p class="lede">The proposal’s ten phases, with tasks from the proposal and the advisor’s suggestions. Add your own tasks and milestones, or turn on editing to change dates, reword or remove tasks.</p>
   ${editHint()}
-  <div>${PHASES.map((p,i) => {
+  <div class="panel">
+    <h3>Milestones</h3>
+    ${(C().milestones || []).slice().sort((a,b) => (a.date||"").localeCompare(b.date||"")).map(m => editing
+      ? `<div class="edit-row"><input type="date" data-edit="ms:${esc(m.id)}:date" value="${esc(m.date)}" aria-label="Milestone date" style="max-width:170px"><input type="text" data-edit="ms:${esc(m.id)}:label" value="${esc(m.label)}" aria-label="Milestone"><button class="xbtn" data-del="ms:${esc(m.id)}">Remove</button></div>`
+      : `<div class="ms-row ${m.date && daysUntil(m.date) < 0 ? "past" : ""}"><span class="ms-date">${m.date ? esc(fmtDY(new Date(m.date + "T00:00:00"))) : "No date"}</span><span>${esc(m.label)}</span><span class="small muted">${m.date ? "Week " + dateToWeek(m.date) : ""}</span></div>`).join("") || `<p class="small muted">No milestones yet. Presentation dates, order deadlines and check-ins work well here.</p>`}
+    <div class="addrow"><input type="date" id="nmsDate" aria-label="New milestone date" style="max-width:170px;flex:none"><input type="text" id="nmsLabel" placeholder="Add a milestone, e.g. End-of-semester presentation" aria-label="New milestone"><button class="btn ghost" data-action="addMs">Add</button></div>
+  </div>
+  ${editing ? `<p class="small" style="margin-top:14px"><button class="btn ghost" data-action="resetSchedule">Reset phase dates to the proposal</button> <span class="muted">Phase dates move with the Week 1 start date in Settings.</span></p>` : ""}
+  <div>${PH().map((p,i) => {
     const st = phaseStatus(p, wk); const [d,n] = phaseDone(p);
     const badge = labels[st] ? `<span class="badge ${st==="done"?"done":(st==="later"?"":"now")}">${labels[st]}</span>` : "";
     return `<div class="phase">
-      <div class="wk">Weeks ${p.s}–${p.e}<small>Phase ${i+1} · ${d}/${n} done</small></div>
+      <div class="wk">Weeks ${p.s}–${p.e}<small>${phaseDates(p)}</small><small>Phase ${i+1} · ${d}/${n} done</small>
+        ${editing ? `<label class="wk-edit">Starts<input type="date" data-edit="pweek:${p.id}:s" value="${iso(weekStart(p.s))}"></label><label class="wk-edit">Ends<input type="date" data-edit="pweek:${p.id}:e" value="${iso(weekEnd(p.e))}"></label>` : ""}</div>
       <div>
         ${editing ? `<div class="addrow" style="margin:0 0 8px"><input type="text" data-edit="phase:${p.id}" value="${esc(ptitle(p))}" aria-label="Phase title"></div>` : `<h3>${esc(ptitle(p))}${badge}</h3>`}
         ${phaseTasks(p).map(t => editing ? editTaskRow(p.id, t) : checkRow(t[0], t[1], "")).join("")}
@@ -1311,6 +1364,49 @@ function vSwot(){
   </div>`;
 }
 
+function vSettings(){
+  const S = C().summary, P = C().pres;
+  const repoUrl = access ? `https://github.com/${encodeURIComponent(access.owner)}/${encodeURIComponent(access.repo)}` : "";
+  const histUrl = access ? `${repoUrl}/commits/${encodeURIComponent(access.branch)}/${access.dataPath.split("/").map(encodeURIComponent).join("/")}` : "";
+  return `<h2>Settings</h2>
+  <p class="lede">Project details, dates, your account and backups. Changes here save to GitHub like everything else.</p>
+  <div class="grid g2">
+    <div class="panel">
+      <h3>Project</h3>
+      <div class="form">
+        <div class="wide"><label for="stTitle">Project title</label><input type="text" id="stTitle" data-edit="summary:title" value="${esc(S.title)}"></div>
+        <div><label for="stInv">Investigator</label><input type="text" id="stInv" data-edit="summary:investigator" value="${esc(S.investigator)}"></div>
+        <div><label for="stAdv">Faculty advisor</label><input type="text" id="stAdv" data-edit="summary:advisor" value="${esc(S.advisor)}"></div>
+        <div class="wide"><label for="stSch">Institution</label><input type="text" id="stSch" data-edit="summary:school" value="${esc(S.school)}"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Dates</h3>
+      <div class="form">
+        <div><label for="startDate">Week 1 starts on</label><input type="date" id="startDate" data-setting="start" value="${esc(state.progress.start)}"></div>
+        <div><label>Project ends</label><div class="readout">${esc(fmtDY(weekEnd(TW())))} · week ${TW()}</div></div>
+        <div><label for="stEvent">Presentation</label><input type="text" id="stEvent" data-edit="pres:event" value="${esc(P.event)}"></div>
+        <div><label for="stPDate">Presentation date</label><input type="text" id="stPDate" data-edit="pres:date" value="${esc(P.date)}"></div>
+      </div>
+      <p class="small muted" style="margin-top:10px">The end date comes from the last phase. Change phase dates with <strong>Edit content</strong> on the Timeline tab; moving the start date shifts every phase with it.</p>
+      <button class="btn ghost" data-action="resetSchedule">Reset phase dates to the proposal</button>
+    </div>
+    <div class="panel">
+      <h3>Your account</h3>
+      <p>Signed in as <strong>${esc((who && who.name) || "")}</strong>.</p>
+      <p><button class="btn ghost" data-action="signout">Sign out</button></p>
+      <p class="small muted">To change passwords or renew GitHub access when the token expires, open <a href="?setup">setup</a>. It needs a GitHub access token for this repository.</p>
+    </div>
+    <div class="panel">
+      <h3>Data and backups</h3>
+      ${access ? `<p class="small">Saved in <a href="${repoUrl}" target="_blank" rel="noopener">${esc(access.owner)}/${esc(access.repo)}</a>. Every save is a commit; see the <a href="${histUrl}" target="_blank" rel="noopener">history of the data file</a> to look at or restore earlier versions.</p>` : ""}
+      <p><button class="btn ghost" data-action="export">Download backup</button>
+      <label class="btn ghost" style="display:inline-block">Restore backup<input type="file" data-import="1" accept="application/json,.json" hidden></label></p>
+      <p class="small muted">Restoring replaces everything in the tracker with the backup file’s contents.</p>
+    </div>
+  </div>`;
+}
+
 function vGlossary(){
   const g = C().glossary;
   const done = g.filter(x => x.done).length;
@@ -1349,8 +1445,8 @@ const SLIDES = [
     const P = C().pres;
     return `<div class="s-titlewrap"><div class="s-bar"></div>
       <h1 class="s-h1">${esc(C().summary.title)}</h1>
-      <p class="s-by">Cristian Fama</p>
-      <p class="s-meta">Faculty advisor: Michael Qaissaunee<br>Brookdale Community College</p>
+      <p class="s-by">${esc(C().summary.investigator)}</p>
+      <p class="s-meta">Faculty advisor: ${esc(C().summary.advisor)}<br>${esc(C().summary.school)}</p>
       <p class="s-meta s-event">${esc([P.event, P.date].filter(Boolean).join(" · "))}</p></div>`;
   }, cls:"s-title"},
   {id:"problem", name:"The problem", fields:[["facts","Key facts (one per line)"]], build: () => `
@@ -1368,11 +1464,11 @@ const SLIDES = [
     <div class="s-fig">${SCHEMATIC}</div>${bullets(C().pres.design,"s-list s-two") || `<p class="s-placeholder">Add design decisions: where the assist energy comes from, syringe sizes, string routing.</p>`}`},
   {id:"progress", name:"Progress", fields:[], build: () => {
     const st = stats();
-    const done = PHASES.filter(p => phaseStatus(p, st.wk) === "done").map(ptitle);
+    const done = PH().filter(p => phaseStatus(p, st.wk) === "done").map(ptitle);
     return `<h2 class="s-h2">Progress</h2>
-      <div class="s-stats"><div><b>${st.pct}%</b>of tasks done</div><div><b>${Math.min(Math.max(st.wk,1),TOTAL_WEEKS)}</b>of ${TOTAL_WEEKS} weeks</div><div><b>${done.length}</b>of ${PHASES.length} phases complete</div></div>
-      <div class="s-timeline">${PHASES.map((p,i) => { const [d,n] = phaseDone(p); return `<div style="flex:${p.e - p.s + 1}"><span class="s-tfill" style="width:${n?d/n*100:0}%"></span><i>${i+1}</i></div>`; }).join("")}</div>
-      ${done.length ? `<p class="s-body">Completed: ${esc(done.join("; "))}</p>` : `<p class="s-body">Current phase: ${esc(PHASES.filter(p => st.wk >= p.s && st.wk <= p.e).map(ptitle).join("; ") || "—")}</p>`}`;
+      <div class="s-stats"><div><b>${st.pct}%</b>of tasks done</div><div><b>${Math.min(Math.max(st.wk,1),TW())}</b>of ${TW()} weeks</div><div><b>${done.length}</b>of ${PH().length} phases complete</div></div>
+      <div class="s-timeline">${PH().map((p,i) => { const [d,n] = phaseDone(p); return `<div style="flex:${p.e - p.s + 1}"><span class="s-tfill" style="width:${n?d/n*100:0}%"></span><i>${i+1}</i></div>`; }).join("")}</div>
+      ${done.length ? `<p class="s-body">Completed: ${esc(done.join("; "))}</p>` : `<p class="s-body">Current phase: ${esc(PH().filter(p => st.wk >= p.s && st.wk <= p.e).map(ptitle).join("; ") || "—")}</p>`}`;
   }},
   {id:"materials", name:"Materials and budget", fields:[], build: () => {
     const st = stats();
@@ -1396,7 +1492,7 @@ const SLIDES = [
   }},
   {id:"next", name:"Challenges and next steps", fields:[["challenges","Challenges (one per line)"],["next","Next steps (one per line; blank uses upcoming phases)"]], build: () => {
     const P = C().pres, wk = currentWeek();
-    const upcoming = PHASES.filter(p => phaseStatus(p, wk) !== "done" && p.e >= wk).slice(0,4).map(p => `Weeks ${p.s}–${p.e}: ${ptitle(p)}`).join("\n");
+    const upcoming = PH().filter(p => phaseStatus(p, wk) !== "done" && p.e >= wk).slice(0,4).map(p => `Weeks ${p.s}–${p.e}: ${ptitle(p)}`).join("\n");
     return `<h2 class="s-h2">Challenges and next steps</h2>
       <div class="s-cols"><div><h3 class="s-h3">Challenges</h3>${bullets(P.challenges,"s-list") || `<p class="s-placeholder">Add the challenges you ran into.</p>`}</div>
       <div><h3 class="s-h3">Next steps</h3>${bullets(P.next || upcoming,"s-list")}</div></div>`;
@@ -1526,7 +1622,7 @@ function vNotes(){
 /* ---------- Render ---------- */
 function render(){
   renderHeader(); renderTabs();
-  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, glossary:vGlossary, present:vPresent};
+  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, glossary:vGlossary, present:vPresent, settings:vSettings};
   document.getElementById("main").innerHTML = (views[currentTab] || vOverview)();
 }
 function requestRender(){
@@ -1650,6 +1746,16 @@ function applyEdit(s, key, v){
     }
     case "swot": { const it = (c.swot[a] || []).find(x => x.id === b); if (it) it.text = v; break; }
     case "sugg": { const it = c.sugg.find(x => x.id === a); if (it) it[b] = v; break; }
+    case "pweek": {
+      const base = PHASES_BASE.find(x => x.id === a); if (!base) break;
+      const cur = Object.assign({s:base.s, e:base.e}, c.phaseWeeks[a] || {});
+      const w = dateToWeek(v, s); if (w === null) break;
+      cur[b] = Math.max(1, w);
+      if (cur.e < cur.s){ if (b === "s") cur.e = cur.s; else cur.s = cur.e; }
+      if (cur.s === base.s && cur.e === base.e) delete c.phaseWeeks[a]; else c.phaseWeeks[a] = cur;
+      break;
+    }
+    case "ms": { const it = c.milestones.find(x => x.id === a); if (it) it[b] = v; break; }
     case "gloss": { const it = c.glossary.find(x => x.id === a); if (it) it[b] = v; break; }
     case "slideOn": if (v) delete c.pres.hidden[a]; else c.pres.hidden[a] = true; break;
     case "pres": c.pres[a] = v; break;
@@ -1669,6 +1775,8 @@ function applyDelete(s, key){
     else { const o = s.materials.items[a] = s.materials.items[a] || {}; o.hidden = true; }
   } else if (kind === "swot"){
     c.swot[a] = (c.swot[a] || []).filter(x => x.id !== b);
+  } else if (kind === "ms"){
+    c.milestones = c.milestones.filter(x => x.id !== a);
   } else if (kind === "gloss"){
     c.glossary = c.glossary.filter(x => x.id !== a);
   } else if (kind === "sugg"){
@@ -1700,7 +1808,15 @@ main.addEventListener("click", e => {
     const text = val("nsText"); if (!text){ document.getElementById("nsText").focus(); return; }
     const item = {id:"s" + uid(), text, why:val("nsWhy"), top:document.getElementById("nsTop").checked};
     mutate(s => s.content.sugg.push(clone(item))); render();
-  } else if (a === "addGloss"){
+  } else if (a === "addMs"){
+    const label = val("nmsLabel"); if (!label){ document.getElementById("nmsLabel").focus(); return; }
+    const item = {id:"ms" + uid(), date:val("nmsDate"), label};
+    mutate(s => s.content.milestones.push(clone(item))); render();
+  } else if (a === "resetSchedule"){
+    mutate(s => { s.content.phaseWeeks = {}; }); render();
+  } else if (a === "export"){ doExport(); }
+  else if (a === "signout"){ signOut(); }
+  else if (a === "addGloss"){
     const term = val("ngTerm"); if (!term){ document.getElementById("ngTerm").focus(); return; }
     const item = {id:"g" + uid(), cat:val("ngCat") || "Other", term, def:val("ngDef"), slide:false, done:false};
     mutate(s => s.content.glossary.push(clone(item))); render();
@@ -1716,15 +1832,16 @@ main.addEventListener("keydown", e => {
 document.getElementById("editToggle").addEventListener("click", () => { editing = !editing; renderPending = false; render(); });
 
 /* Export / import / sign out */
-document.getElementById("exportBtn").addEventListener("click", () => {
+function doExport(){
   const blob = new Blob([JSON.stringify(Object.assign({version:1}, state), null, 2)], {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "eva-glove-tracker-backup-" + new Date().toISOString().slice(0,10) + ".json";
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-});
-document.getElementById("importFile").addEventListener("change", async e => {
+}
+document.getElementById("exportBtn").addEventListener("click", doExport);
+async function doImport(e){
   const f = e.target.files && e.target.files[0]; if (!f) return;
   try {
     const data = normalize(JSON.parse(await f.text()));
@@ -1732,12 +1849,15 @@ document.getElementById("importFile").addEventListener("change", async e => {
     render();
   } catch(err){ showBanner("That file couldn’t be read. Choose a file made with Download backup."); }
   e.target.value = "";
-});
+}
+document.getElementById("importFile").addEventListener("change", doImport);
+main.addEventListener("change", e => { if (e.target.dataset && e.target.dataset.import) doImport(e); });
+document.getElementById("settingsBtn").addEventListener("click", () => { currentTab = "settings"; try { history.replaceState(null, "", location.pathname + location.search + "#settings"); } catch(_){} render(); window.scrollTo(0,0); });
 document.getElementById("signout").addEventListener("click", signOut);
 
 /* Start */
 const h = (location.hash || "").slice(1);
-if (TABS.some(t => t[0] === h)) currentTab = h;
+if (TABS.some(t => t[0] === h) || h === "settings") currentTab = h;
 boot();
 })();
 </script>
