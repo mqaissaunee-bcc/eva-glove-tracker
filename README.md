@@ -17,6 +17,15 @@ A single-page tracker for Cristian Fama's passive hydraulic grip-assistance proj
 - **Presentation** builds slides from everything in the tracker. Add Cristian's own text (design decisions, challenges, conclusions) and speaker notes under each slide, hide slides you don't need, then **Present** (arrow keys, Esc to exit, N for notes) or **Print or save as PDF** (choose "Save as PDF" in the print dialog; one slide per page).
 - Existing data from earlier versions carries over; the new content is added the first time someone edits it.
 
+## People and access
+
+Prof. Qaissaunee (the advisor account) sees a **People** section in Settings to add, remove, and reset passwords for others:
+
+- **Editor** — same access as Cristian.
+- **Viewer** — can see every tab, present, print, and download a backup, but can't change anything. Viewers use a second fine-grained token with **Contents: Read-only**, pasted once when adding the first viewer, so GitHub itself rejects any change they attempt.
+
+Removing someone takes their password off the list. For an immediate cut-off on a device where they chose "Stay signed in," also replace the token (setup for the main token, People → Viewer token for viewers). Rerunning setup keeps viewers but resets the editor list to the two people entered there.
+
 ## One-time setup
 
 1. Put `index.html` in a dedicated repository (for example `eva-glove-tracker`) and turn on GitHub Pages (Settings → Pages → deploy from branch `main`, folder `/`).

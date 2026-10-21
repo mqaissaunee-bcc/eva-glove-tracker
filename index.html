@@ -201,6 +201,11 @@ td input.mt{margin-top:6px}
 .readout{padding:7px 0;font-weight:600}
 #settingsBtn[aria-pressed="true"]{border-color:var(--ink)}
 
+/* Read-only */
+body.readonly .addrow, body.readonly .panel:has([data-action^="add"]), body.readonly label.btn:has(input[data-import]), body.readonly #importFile, body.readonly label.btn:has(#importFile){display:none}
+.people .form{margin-top:6px}
+.people details summary{cursor:pointer;font-weight:600}
+
 /* Glossary */
 dl.gl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
 .gl-item{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}
@@ -517,7 +522,7 @@ function defaults(name){
 }
 const state = {};
 DOCS.forEach(d => state[d] = defaults(d));
-const readOnly = false;
+let readOnly = false;
 let currentTab = "overview";
 let editing = false;
 let renderPending = false;
@@ -600,7 +605,7 @@ async function loadRemote(){
 }
 
 function mutate(fn){
-  if (!token) return;
+  if (!token || readOnly) return;
   fn(state);
   pending.push(fn);
   stopped = false;
@@ -673,7 +678,7 @@ async function poll(){
       try { remote = normalize(JSON.parse(f.text)); } catch(e){ return; }
       adopt(clone(remote));
       requestRender();
-      setSync("saved");
+      setSync(readOnly ? "viewonly" : "saved");
     }
   } catch(e){}
 }
@@ -685,7 +690,7 @@ function setSync(s){
   dot.className = "dot";
   const map = {
     loading:["", "Loading from GitHub…"], saved:["shared", "Saved to GitHub"], saving:["local", "Saving…"],
-    dirty:["local", "Unsaved changes"], error:["err", "Not saved"]
+    dirty:["local", "Unsaved changes"], error:["err", "Not saved"], viewonly:["shared", "View only"]
   };
   const [cls, txt] = map[s] || ["", ""];
   if (cls) dot.classList.add(cls);
@@ -704,7 +709,7 @@ function readSession(){
   return null;
 }
 function writeSession(remember){
-  const s = JSON.stringify({token, name:who.name, role:who.role, owner:access.owner, repo:access.repo});
+  const s = JSON.stringify({token, name:who.name, role:who.role, id:who.id || null, owner:access.owner, repo:access.repo});
   try { sessionStorage.setItem(SESSION_KEY, s); } catch(e){}
   try { if (remember) localStorage.setItem(SESSION_KEY, s); else localStorage.removeItem(SESSION_KEY); } catch(e){}
 }
@@ -736,7 +741,7 @@ function showLogin(msg){
       if (tok){ found = {u, tok}; break; }
     }
     if (!found){ btn.disabled = false; m.textContent = "That password doesn’t match."; pw.select(); return; }
-    token = found.tok; who = {name:found.u.name, role:found.u.role};
+    token = found.tok; who = {name:found.u.name, role:found.u.role, id:found.u.id || null};
     writeSession(document.getElementById("remember").checked);
     start();
   });
@@ -757,7 +762,7 @@ function setupDefaults(){
 function showSetup(){
   const d = setupDefaults();
   showGate(`<h2>Set up the tracker</h2>
-    <p class="small muted">Run this once, and again whenever the GitHub token expires or a password changes. The token is encrypted in this browser with each password; neither the token nor the passwords are stored in plain text.</p>
+    <p class="small muted">Run this once, and again whenever the main GitHub token expires. Rerunning keeps viewers but replaces the editor list with the two people below; re-add any other editors in Settings → People. The token is encrypted in this browser with each password; neither the token nor the passwords are stored in plain text.</p>
     <form id="setupForm" class="stack">
       <fieldset><legend>Repository</legend>
         <label for="sOwner">GitHub owner</label><input type="text" id="sOwner" value="${esc(d.owner)}" required>
@@ -800,25 +805,32 @@ function showSetup(){
       if (!r.ok) throw new Error("GitHub returned an error (" + r.status + ").");
       m.textContent = "Encrypting the token for each password…";
       const users = [
-        Object.assign({name:v("aName") || "Advisor", role:"advisor"}, await encryptFor(aPw, tok, ITER)),
-        Object.assign({name:v("cName") || "Student", role:"student"}, await encryptFor(cPw, tok, ITER))
+        Object.assign({id:"u" + uid(), name:v("aName") || "Advisor", role:"advisor"}, await encryptFor(aPw, tok, ITER)),
+        Object.assign({id:"u" + uid(), name:v("cName") || "Student", role:"student"}, await encryptFor(cPw, tok, ITER))
       ];
       const dataPath = (folder ? folder + "/" : "") + "data.json";
       const accessPath = (folder ? folder + "/" : "") + "access.json";
-      const obj = Object.assign({version:1}, cfg, {dataPath, iterations:ITER, users, created:new Date().toISOString()});
-      m.textContent = "Saving access.json…";
       const existing = await ghGet(cfg, accessPath, tok);
+      let kept = 0;
+      if (existing){
+        try {
+          const old = JSON.parse(existing.text);
+          (old.users || []).filter(u => u.role === "viewer").forEach(u => { users.push(u); kept++; });
+        } catch(_){}
+      }
+      const obj = Object.assign({version:1}, cfg, {dataPath, accessPath, iterations:ITER, users, created:new Date().toISOString()});
+      m.textContent = "Saving access.json…";
       await ghPut(cfg, accessPath, JSON.stringify(obj, null, 2), existing && existing.sha, "Set up tracker access", tok);
       const data = await ghGet(cfg, dataPath, tok);
       if (!data){
         m.textContent = "Creating data.json…";
         await ghPut(cfg, dataPath, JSON.stringify(Object.assign({version:1}, normalize({})), null, 1), null, "Create tracker data file", tok);
       }
-      access = obj; token = tok; who = {name:users[0].name, role:"advisor"};
+      access = obj; token = tok; who = {name:users[0].name, role:"advisor", id:users[0].id};
       writeSession(false);
       try { history.replaceState(null, "", location.pathname + location.hash); } catch(_){}
       await start();
-      showBanner("Setup saved. GitHub Pages can take a minute or two to publish access.json before the passwords work on other devices.");
+      showBanner("Setup saved. GitHub Pages can take a minute or two to publish access.json before the passwords work on other devices." + (kept ? ` ${kept} viewer${kept>1?"s were":" was"} kept; to add new viewers, paste the read-only token again in Settings → People.` : ""));
     } catch(err){
       btn.disabled = false;
       m.textContent = err.status === 0 ? "Couldn’t reach GitHub." : (err.message || "Setup failed.");
@@ -828,12 +840,15 @@ function showSetup(){
 
 async function start(){
   gate.hidden = true; app.hidden = false;
+  readOnly = !!(who && who.role === "viewer");
+  if (readOnly) editing = false;
+  document.body.classList.toggle("readonly", readOnly);
   document.getElementById("who").textContent = who.name;
   setSync("loading"); render();
   try {
     await loadRemote();
     adopt(clone(remote));
-    setSync("saved"); render();
+    setSync(readOnly ? "viewonly" : "saved"); render();
     if (!start.polling){ start.polling = setInterval(poll, 45000); }
   } catch(e){
     if (e.status === 401){
@@ -854,7 +869,7 @@ async function boot(){
     return showGate(`<h2>Not set up yet</h2><p>This tracker needs a one-time setup before anyone can sign in.</p><p><a class="btn" href="?setup">Start setup</a></p><p class="small muted">If setup was just completed, wait a minute or two for GitHub Pages to publish, then reload.</p>`);
   }
   const s = readSession();
-  if (s){ token = s.token; who = {name:s.name, role:s.role}; return start(); }
+  if (s){ token = s.token; who = {name:s.name, role:s.role, id:s.id || null}; return start(); }
   showLogin();
 }
 const SCHEMATIC = `<svg class="schem" viewBox="0 0 720 210" role="img" aria-label="Diagram: input syringe pushed by a body motion sends fluid through tubing to an output syringe on the wrist, whose plunger pushes a lever that pulls a string along the finger.">
@@ -1036,6 +1051,7 @@ function renderHeader(){
   });
   track.innerHTML = html;
   const eb = document.getElementById("editToggle");
+  eb.hidden = readOnly;
   eb.setAttribute("aria-pressed", String(editing));
   eb.textContent = editing ? "Done editing" : "Edit content";
   document.body.classList.toggle("editing", editing);
@@ -1393,7 +1409,7 @@ function vSettings(){
     </div>
     <div class="panel">
       <h3>Your account</h3>
-      <p>Signed in as <strong>${esc((who && who.name) || "")}</strong>.</p>
+      <p>Signed in as <strong>${esc((who && who.name) || "")}</strong> · ${esc(ROLE_LABEL[(who && who.role)] || "Editor")}.</p>
       <p><button class="btn ghost" data-action="signout">Sign out</button></p>
       <p class="small muted">To change passwords or renew GitHub access when the token expires, open <a href="?setup">setup</a>. It needs a GitHub access token for this repository.</p>
     </div>
@@ -1404,7 +1420,162 @@ function vSettings(){
       <label class="btn ghost" style="display:inline-block">Restore backup<input type="file" data-import="1" accept="application/json,.json" hidden></label></p>
       <p class="small muted">Restoring replaces everything in the tracker with the backup file’s contents.</p>
     </div>
+  </div>
+  ${who && who.role === "advisor" ? vPeople() : ""}`;
+}
+
+/* ---------- People (advisor only) ---------- */
+const ROLE_LABEL = {advisor:"Advisor · manages people", student:"Editor", editor:"Editor", viewer:"Viewer · read only"};
+let peopleMsg = "", resetFor = null, peopleBusy = false;
+const isSelf = u => !!who && (who.id ? u.id === who.id : (u.name === who.name && u.role === who.role));
+function vPeople(){
+  const users = (access && access.users) || [];
+  const hasRO = !!(access && access.viewerKey);
+  const dis = peopleBusy ? "disabled" : "";
+  return `<div class="panel section people">
+    <h3>People</h3>
+    <p class="small muted">Everyone signs in with their own password. Editors can change anything; viewers can see every tab, present and download a backup, but can’t change anything. New passwords work on other devices after GitHub Pages publishes, usually within two minutes.</p>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Name</th><th>Access</th><th></th></tr></thead>
+      <tbody>${users.map((u, i) => {
+        const key = u.id || ("i" + i);
+        return `<tr><td>${esc(u.name)}${isSelf(u) ? ` <span class="added">You</span>` : ""}</td><td>${esc(ROLE_LABEL[u.role] || u.role)}</td>
+          <td class="num"><button class="xbtn" data-action="resetPw" data-key="${esc(key)}" ${dis}>${isSelf(u) ? "Change my password" : "Set new password"}</button>${isSelf(u) ? "" : ` <button class="xbtn" data-action="removePerson" data-key="${esc(key)}" ${dis}>Remove</button>`}</td></tr>
+          ${resetFor === key ? `<tr><td colspan="3"><div class="form">
+            <div><label for="rpw1">New password for ${esc(u.name)} (12+ characters)</label><input type="password" id="rpw1" autocomplete="new-password"></div>
+            <div><label for="rpw2">Confirm</label><input type="password" id="rpw2" autocomplete="new-password"></div>
+            <div><button class="btn" data-action="savePw" data-key="${esc(key)}" ${dis}>Save password</button></div>
+          </div></td></tr>` : ""}`;
+      }).join("")}</tbody>
+    </table></div>
+    <h3 style="margin-top:18px">Add a person</h3>
+    <div class="form">
+      <div><label for="npName">Name</label><input type="text" id="npName"></div>
+      <div><label for="npRole">Access</label><select id="npRole"><option value="viewer">Viewer (read only)</option><option value="editor">Editor</option></select></div>
+      <div><label for="npPw">Password (12+ characters)</label><input type="password" id="npPw" autocomplete="new-password"></div>
+      <div><label for="npPw2">Confirm password</label><input type="password" id="npPw2" autocomplete="new-password"></div>
+      ${hasRO ? "" : `<div class="wide"><label for="npRO">Read-only GitHub token (needed once, for the first viewer)</label><input type="password" id="npRO" autocomplete="off" placeholder="Only needed when adding a viewer"></div>`}
+      <div><button class="btn" data-action="addPerson" ${dis}>Add person</button></div>
+    </div>
+    ${hasRO ? "" : `<p class="small muted" style="margin-top:8px">Create it like the main token (same repository) but set <strong>Contents</strong> to <strong>Read-only</strong>. Viewers’ passwords unlock this token instead of the main one, so GitHub itself refuses any change they try to make.</p>`}
+    <details class="small" style="margin-top:14px"><summary>Viewer token and removing access</summary>
+      <p style="margin-top:8px">Removing someone takes their password off the list. A browser where they chose “Stay signed in” keeps its key until that token is replaced, so for a clean cut-off also delete and replace the token on GitHub: the main token through <a href="?setup">setup</a> for an editor, or the read-only token below for a viewer.</p>
+      <div class="form">
+        <div class="wide"><label for="roNew">Replace the read-only token</label><input type="password" id="roNew" autocomplete="off"></div>
+        <div><button class="btn ghost" data-action="replaceRO" ${dis}>Replace token</button></div>
+      </div>
+      <p class="muted">After replacing it, set a new password for each viewer so their sign-in picks up the new token.</p>
+    </details>
+    <p class="gate-msg" role="status">${esc(peopleMsg)}</p>
   </div>`;
+}
+function accessPathOf(){ return access.accessPath || access.dataPath.replace(/data\.json$/, "access.json"); }
+async function checkToken(tok){
+  const r = await gh(`/repos/${encodeURIComponent(access.owner)}/${encodeURIComponent(access.repo)}`, tok);
+  if (r.status === 401) throw new Error("GitHub didn’t accept that token.");
+  if (r.status === 404) throw new Error("That token can’t see this repository.");
+  if (!r.ok) throw new Error("GitHub returned an error (" + r.status + ").");
+}
+async function saveAccess(next, message){
+  const path = accessPathOf();
+  const cur = await ghGet(access, path, token);
+  await ghPut(access, path, JSON.stringify(next, null, 2), cur && cur.sha, message, token);
+  access = next;
+}
+async function readOnlyToken(){
+  if (!access.viewerKey) return null;
+  return tryDecrypt(token, access.viewerKey, access.viewerKey.iterations || 100000);
+}
+async function passwordInUse(pw, exceptKey){
+  for (const [i, u] of (access.users || []).entries()){
+    const key = u.id || ("i" + i);
+    if (key === exceptKey) continue;
+    if (await tryDecrypt(pw, u, access.iterations || ITER)) return true;
+  }
+  return false;
+}
+function userByKey(key){ return (access.users || []).find((u, i) => (u.id || ("i" + i)) === key); }
+function setPeopleMsg(t){ peopleMsg = t; const el = document.querySelector(".people .gate-msg"); if (el) el.textContent = t; }
+async function peopleAction(fn){
+  if (peopleBusy) return;
+  peopleBusy = true; setPeopleMsg("Working…");
+  document.querySelectorAll(".people button").forEach(b => b.disabled = true);
+  let ok = false;
+  try { const m = await fn(); peopleMsg = m || ""; ok = true; }
+  catch(err){ peopleMsg = err.status === 0 ? "Couldn’t reach GitHub." : (err.status ? "GitHub returned an error (" + err.status + ")." : err.message); }
+  peopleBusy = false;
+  if (ok) render();
+  else { setPeopleMsg(peopleMsg); document.querySelectorAll(".people button").forEach(b => b.disabled = false); }
+}
+function pwCheck(a, b){
+  if (a.length < 12) throw new Error("Use at least 12 characters.");
+  if (a !== b) throw new Error("The passwords don’t match.");
+}
+async function addPerson(){
+  const name = val("npName"), role = val("npRole"), pw = document.getElementById("npPw").value, pw2 = document.getElementById("npPw2").value;
+  const roInput = document.getElementById("npRO") ? document.getElementById("npRO").value.trim() : "";
+  await peopleAction(async () => {
+    if (!name) throw new Error("Enter a name.");
+    pwCheck(pw, pw2);
+    setPeopleMsg("Checking the password isn’t already in use…");
+    if (await passwordInUse(pw)) throw new Error("Someone already uses that password. Choose another.");
+    const next = clone(access);
+    next.users = next.users.map((u, i) => u.id ? u : Object.assign({id:"u" + i + uid()}, u));
+    let secret = token;
+    if (role === "viewer"){
+      secret = await readOnlyToken();
+      if (!secret){
+        if (!roInput) throw new Error("Paste a read-only token to add the first viewer.");
+        await checkToken(roInput);
+        secret = roInput;
+        next.viewerKey = Object.assign({iterations:100000}, await encryptFor(token, roInput, 100000));
+      }
+    }
+    next.users.push(Object.assign({id:"u" + uid(), name, role}, await encryptFor(pw, secret, next.iterations || ITER)));
+    await saveAccess(next, `Add ${role} ${name}`);
+    return `${name} added. Their password will work on other devices once GitHub Pages publishes, usually within two minutes.`;
+  });
+}
+async function removePerson(key){
+  const u = userByKey(key); if (!u || isSelf(u)) return;
+  await peopleAction(async () => {
+    const next = clone(access);
+    next.users = next.users.filter((x, i) => (x.id || ("i" + i)) !== key);
+    await saveAccess(next, `Remove ${u.name}`);
+    resetFor = null;
+    return `${u.name} removed.`;
+  });
+}
+async function savePw(key){
+  const u = userByKey(key); if (!u) return;
+  const pw = document.getElementById("rpw1").value, pw2 = document.getElementById("rpw2").value;
+  await peopleAction(async () => {
+    pwCheck(pw, pw2);
+    if (await passwordInUse(pw, key)) throw new Error("Someone else already uses that password. Choose another.");
+    let secret = token;
+    if (u.role === "viewer"){
+      secret = await readOnlyToken();
+      if (!secret) throw new Error("Add the read-only token first (Viewer token, below).");
+    }
+    const next = clone(access);
+    const i = next.users.findIndex((x, j) => (x.id || ("i" + j)) === key);
+    next.users[i] = Object.assign({id:u.id || ("u" + uid()), name:u.name, role:u.role}, await encryptFor(pw, secret, next.iterations || ITER));
+    await saveAccess(next, `New password for ${u.name}`);
+    if (isSelf(u)){ who.id = next.users[i].id; writeSession(false); }
+    resetFor = null;
+    return `Password saved for ${u.name}.`;
+  });
+}
+async function replaceRO(){
+  const ro = document.getElementById("roNew").value.trim();
+  await peopleAction(async () => {
+    if (!ro) throw new Error("Paste the new read-only token.");
+    await checkToken(ro);
+    const next = clone(access);
+    next.viewerKey = Object.assign({iterations:100000}, await encryptFor(token, ro, 100000));
+    await saveAccess(next, "Replace viewer token");
+    return "Read-only token replaced. Now set a new password for each viewer.";
+  });
 }
 
 function vGlossary(){
@@ -1624,6 +1795,13 @@ function render(){
   renderHeader(); renderTabs();
   const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, glossary:vGlossary, present:vPresent, settings:vSettings};
   document.getElementById("main").innerHTML = (views[currentTab] || vOverview)();
+  if (readOnly){
+    const allow = ["present","print","export","signout"];
+    document.querySelectorAll("#main input, #main textarea, #main select, #main button").forEach(el => {
+      if (el.dataset.calc !== undefined || allow.includes(el.dataset.action)) return;
+      el.disabled = true;
+    });
+  }
 }
 function requestRender(){
   const a = document.activeElement;
@@ -1815,6 +1993,11 @@ main.addEventListener("click", e => {
   } else if (a === "resetSchedule"){
     mutate(s => { s.content.phaseWeeks = {}; }); render();
   } else if (a === "export"){ doExport(); }
+  else if (a === "resetPw"){ resetFor = resetFor === t.dataset.key ? null : t.dataset.key; peopleMsg = ""; render(); const f = document.getElementById("rpw1"); if (f) f.focus(); }
+  else if (a === "savePw"){ savePw(t.dataset.key); }
+  else if (a === "removePerson"){ removePerson(t.dataset.key); }
+  else if (a === "addPerson"){ addPerson(); }
+  else if (a === "replaceRO"){ replaceRO(); }
   else if (a === "signout"){ signOut(); }
   else if (a === "addGloss"){
     const term = val("ngTerm"); if (!term){ document.getElementById("ngTerm").focus(); return; }
