@@ -1,9 +1,13 @@
 {
  "version": 1,
+ "updated": "2026-10-21T16:23:51.052Z",
+ "updatedBy": "Prof. Qaissaunee",
  "progress": {
   "tasks": {},
   "custom": {},
-  "sugg": {},
+  "sugg": {
+   "s5": false
+  },
   "start": "2026-09-02"
  },
  "materials": {
@@ -16,5 +20,191 @@
  },
  "notes": {
   "entries": []
+ },
+ "content": {
+  "summary": {
+   "title": "Passive hydraulic grip assistance for EVA gloves",
+   "problem": "Pressurized EVA gloves resist finger movement, so astronauts work harder to close their hands and tire faster. Repetitive gripping is among the most fatiguing parts of a spacewalk, and Artemis missions will ask for more EVA hours than Apollo did.",
+   "approach": "A glove with rubber bands on the back stands in for a pressurized glove. A passive hydraulic system — syringes, fluid-filled tubing and tendon strings — is added to assist finger flexion without motors or electronics. Hand performance and perceived effort are compared with a bare hand, the glove with bands, and the glove with bands plus the assist.",
+   "goal": "Design, build and test a passive hydraulic prototype that assists finger flexion, and find out whether it reduces the effort to close the hand."
+  },
+  "swot": {
+   "S": [
+    {
+     "id": "S0",
+     "text": "Problem is well motivated with NASA sources, including 2026 Artemis workload research."
+    },
+    {
+     "id": "S1",
+     "text": "Clear grasp of the SSRG and a real niche: a simpler, unpowered alternative."
+    },
+    {
+     "id": "S2",
+     "text": "Three-condition design mirrors the Madden et al. study, so results are easy to compare."
+    },
+    {
+     "id": "S3",
+     "text": "Cheap, available parts make quick iteration easy; spending is well under budget."
+    },
+    {
+     "id": "S4",
+     "text": "Already names leaks, air and weak force as risks."
+    }
+   ],
+   "W": [
+    {
+     "id": "W0",
+     "text": "The energy source and timing of the assist aren’t defined yet."
+    },
+    {
+     "id": "W1",
+     "text": "Pulling on syringes caps force and invites bubbles."
+    },
+    {
+     "id": "W2",
+     "text": "No hypothesis or target to call it a success."
+    },
+    {
+     "id": "W3",
+     "text": "Rubber band resistance isn’t measured or standardized."
+    },
+    {
+     "id": "W4",
+     "text": "Parts list is missing string, the grip device and fittings; glove cost is off."
+    },
+    {
+     "id": "W5",
+     "text": "Building doesn’t start until late fall, close to winter break."
+    }
+   ],
+   "O": [
+    {
+     "id": "O0",
+     "text": "Aim to cancel the glove’s stiffness (static balancing) instead of overpowering it."
+    },
+    {
+     "id": "O1",
+     "text": "A stopcock in the line gives a passive grip lock for holding tasks."
+    },
+    {
+     "id": "O2",
+     "text": "Rehab devices (tenodesis orthoses, body-powered prosthetics) offer tested passive ideas."
+    },
+    {
+     "id": "O3",
+     "text": "Tune the bands to NASA’s published grip-strength figures."
+    },
+    {
+     "id": "O4",
+     "text": "Bench tests give clean data independent of how hard he squeezes."
+    }
+   ],
+   "T": [
+    {
+     "id": "T0",
+     "text": "The measurable effect may be small; a clear null result is still a valid outcome."
+    },
+    {
+     "id": "T1",
+     "text": "Always-on assist could make opening the hand harder."
+    },
+    {
+     "id": "T2",
+     "text": "Leaks and air can make results vary between sessions."
+    },
+    {
+     "id": "T3",
+     "text": "Schedule slip could squeeze the testing window."
+    }
+   ]
+  },
+  "sugg": [
+   {
+    "id": "s1",
+    "top": true,
+    "text": "Decide where the assist energy comes from",
+    "why": "A passive system can only redirect or store energy. If extending the same hand drives the input, it pulls the fingers closed at the same moment you’re opening them."
+   },
+   {
+    "id": "s2",
+    "top": true,
+    "text": "Push the syringes, never pull them",
+    "why": "Suction tops out around 1 atmosphere and air comes out of solution. Mount the output so a pushing plunger pulls the string."
+   },
+   {
+    "id": "s3",
+    "top": true,
+    "text": "Use Luer-lock syringes, barb adapters and clamps",
+    "why": "Otherwise most of the time goes to chasing leaks."
+   },
+   {
+    "id": "s4",
+    "top": true,
+    "text": "Build something crude this semester",
+    "why": "A one-finger rig before winter break leaves spring for improving it."
+   },
+   {
+    "id": "s5",
+    "text": "Start with one finger",
+    "why": "Later, a floating pulley (whiffletree) lets several fingers close around odd shapes."
+   },
+   {
+    "id": "s6",
+    "text": "Replace open jump rings with sewn loops or tubing guides",
+    "why": "Anchor each string firmly at the fingertip."
+   },
+   {
+    "id": "s7",
+    "text": "Use low-stretch string",
+    "why": "Stretch in the string eats up assist travel."
+   },
+   {
+    "id": "s8",
+    "text": "Calibrate the bands with a scale",
+    "why": "Aim for grip with the glove at about 50–60% of bare-hand, close to NASA’s pressurized-glove numbers."
+   },
+   {
+    "id": "s9",
+    "text": "Do a simple bench test",
+    "why": "Force to close the glove at a few positions, assist on vs. off."
+   },
+   {
+    "id": "s10",
+    "text": "Test over several days and vary the order",
+    "why": "Note in the write-up that he is the only test subject."
+   },
+   {
+    "id": "s11",
+    "text": "Try a stopcock as a grip lock",
+    "why": "Close the valve and the fluid holds the grip — a passive version of the SSRG’s hold mode."
+   },
+   {
+    "id": "s12",
+    "text": "Check extension effort too",
+    "why": "The SSRG made opening the hand harder; worth knowing if this design does the same."
+   },
+   {
+    "id": "s13",
+    "text": "Clean up the proposal",
+    "why": "Typos (“cold” for “could”), a duplicated sentence, and matching the parts list to the proposal."
+   }
+  ],
+  "taskText": {},
+  "taskHidden": {},
+  "phaseTitle": {},
+  "pres": {
+   "event": "End-of-semester presentation",
+   "date": "December 2026",
+   "facts": "Grip strength in a pressurized glove drops to 46–58% of bare-hand strength (Mesloh et al.)\nMost spacewalks last 5 to 8 hours\nArtemis plans up to 24 hours of surface EVA per crewmember per week (Estep et al.)\nGlove-related hand injuries have been reported throughout NASA’s history (McFarland et al.)",
+   "prior": "NASA and GM’s Space Suit RoboGlove uses sensors and motors to pull tendons that help close the fingers\nIt reduced the effort to close the hand for more than half of test subjects (Madden et al.)\nIt also made opening the hand harder for many subjects, and it depends on power and electronics\nThis project asks whether a simpler, unpowered system can give some of the same help",
+   "design": "",
+   "challenges": "",
+   "next": "",
+   "conclusions": "",
+   "limitations": "Single test subject (the investigator)\nRubber bands approximate, but don’t reproduce, a pressurized glove",
+   "thanks": "Prof. Michael Qaissaunee, faculty advisor\nBrookdale Community College",
+   "hidden": {},
+   "notes": {}
+  }
  }
 }
