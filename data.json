@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-21T21:08:41.777Z",
+ "updated": "2026-10-21T21:09:39.581Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {},
@@ -369,7 +369,7 @@
   "milestones": [],
   "pres": {
    "event": "End-of-semester presentation",
-   "date": "December 2026",
+   "date": "April 1, 2026",
    "facts": "Grip strength in a pressurized glove drops to 46–58% of bare-hand strength (Mesloh et al.)\nMost spacewalks last 5 to 8 hours\nArtemis plans up to 24 hours of surface EVA per crewmember per week (Estep et al.)\nGlove-related hand injuries have been reported throughout NASA’s history (McFarland et al.)",
    "prior": "NASA and GM’s Space Suit RoboGlove uses sensors and motors to pull tendons that help close the fingers\nIt reduced the effort to close the hand for more than half of test subjects (Madden et al.)\nIt also made opening the hand harder for many subjects, and it depends on power and electronics\nThis project asks whether a simpler, unpowered system can give some of the same help",
    "design": "",
