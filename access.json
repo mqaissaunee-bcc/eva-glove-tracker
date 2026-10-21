@@ -7,6 +7,7 @@
   "iterations": 600000,
   "users": [
     {
+      "id": "u0mvidtunshfico",
       "name": "Prof. Qaissaunee",
       "role": "advisor",
       "salt": "IpnG5t8up0WnyQbBCUqVlQ==",
@@ -14,12 +15,27 @@
       "ct": "30WsNvGOyQ29qFD3kguhnpYtaj0iBJuLUAfovs0Yh4OYOLfzoniXTLDT5Ovbkn/63WNZfyYz10QHKNXgtxbBY17CG2bzU6e+cD/qjVAyC79kjm6Y9qeE2L6gtYxLNAAymTixV3CYs9vbw6AFgA=="
     },
     {
+      "id": "u1mvidtunsijbxn",
       "name": "Cristian",
       "role": "student",
       "salt": "PojgiWLlWJvKxZfLumBr6g==",
       "iv": "8+D3f61Mb44CwAZo",
       "ct": "WxUFeFmMaM4sDdR0HJz1xCoPppxnVluuym37+Zu92uUFgr+SwP7oTKbPV/4gEzAY1gzx4JTTq4uoTGHSCRUX7LenS5efxAikzMBNWTisDc84+/Qy4gQ9FWAItPvzuff3KorlD3AqS4Z2NJxNmA=="
+    },
+    {
+      "id": "umvidtuxptza5f",
+      "name": "Guest",
+      "role": "viewer",
+      "salt": "/QxPepRyqAJ+EFMx7YfAUw==",
+      "iv": "oxo1Lljjej0C4fiD",
+      "ct": "cSbEdPLs9jneWCF8PupLiInCAn7/8/W0+Ja8zdqFPszC+Bi81JyCfaFSxewaHiHgfAfd39tqcHMQLxOOLuVUT0yuO19nnV0sKgWge8nExs+KAwaV4rqoR9U4snMynq8Sd1bvGr6Z9Bd/nDcN7Q=="
     }
   ],
-  "created": "2026-10-21T15:25:47.153Z"
+  "created": "2026-10-21T15:25:47.153Z",
+  "viewerKey": {
+    "iterations": 100000,
+    "salt": "AOu1igHmW7UHRJYtoBWr6Q==",
+    "iv": "jk7tHkR0EVaSYc54",
+    "ct": "lRw3IPp6Ei5aSbBeqgr5t06dMQ0peSNelT4kgZTF9Uk5DcfK9ualgpBS4171SkHzHxbcYa755wkznnmu77OEav/N+MNpZlAQHsPaoATahRmF3sYRoPUNF6MdcRHNPMgMyHBLbKns2WuPIPT4DQ=="
+  }
 }
