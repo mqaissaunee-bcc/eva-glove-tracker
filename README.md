@@ -11,6 +11,7 @@ A single-page tracker for Cristian Fama's passive hydraulic grip-assistance proj
 ## Using it
 
 - **Edit content** (top right) turns on editing for the project summary, task and phase names, the materials list, the SWOT, and the suggestions. Changes save when you leave a field.
+- **Glossary** lists technical terms from the project review with short starter definitions. Cristian checks and rewrites each one (Edit content), ticks it off, and picks which terms appear on the Key terms slide.
 - **Presentation** builds slides from everything in the tracker. Add Cristian's own text (design decisions, challenges, conclusions) and speaker notes under each slide, hide slides you don't need, then **Present** (arrow keys, Esc to exit, N for notes) or **Print or save as PDF** (choose "Save as PDF" in the print dialog; one slide per page).
 - Existing data from earlier versions carries over; the new content is added the first time someone edits it.
 

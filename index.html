@@ -186,6 +186,20 @@ a.btn{text-decoration:none;display:inline-block}
 label.inline{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
 td input.mt{margin-top:6px}
 
+/* Glossary */
+dl.gl{margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.gl-item{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}
+.gl-item dt{font-family:var(--display);font-weight:600;font-size:1.15rem}
+.gl-item dd{margin:4px 0 0}
+.gl-item.gl-done{border-left:4px solid var(--fluid)}
+.gl-flags{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px!important;padding-top:8px;border-top:1px solid var(--rule)}
+.gl-edit{display:flex;flex-direction:column;gap:6px}
+.gl-row{display:flex;gap:6px;align-items:center}
+.gl-row input:first-child{flex:2}.gl-row input:nth-child(2){flex:1}
+.slide .s-terms{display:grid;grid-template-columns:1fr 1fr;gap:1.6cqw 4cqw;margin:0}
+.slide .s-terms dt{font-family:var(--display);font-weight:700;font-size:2cqw;color:var(--s-fluid)}
+.slide .s-terms dd{margin:.3cqw 0 0;font-size:1.45cqw;line-height:1.35}
+
 /* Presentation tab */
 .pres-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:20px}
 .slide-list{display:flex;flex-direction:column;gap:26px}
@@ -333,7 +347,8 @@ const PHASES = [
     ["t2a","Re-read Madden et al. (SSRG study) and note what helped and what didn’t"],
     ["t2b","Look at passive devices from rehab: tenodesis orthoses, spring-assisted hand orthoses, body-powered prosthetics"],
     ["t2c","Write one paragraph: where does the assist energy come from, and when is it delivered?"],
-    ["t2d","Sketch how the strings route along the glove"]]},
+    ["t2d","Sketch how the strings route along the glove"],
+    ["t2e","Research each Glossary term and rewrite the definitions in your own words"]]},
   {id:"p3", s:7, e:10, title:"Preliminary component testing", tasks:[
     ["t3a","Push vs. pull demo: pull a sealed water-filled syringe and watch for bubbles"],
     ["t3b","Measure how far a string at each finger travels from open hand to fist"],
@@ -446,6 +461,30 @@ const REFS = [
   "Walsh, S. K. “Next Generation Life Support: High Performance EVA Glove.” NTRS 20150014484, 2015.",
   "“What Does It Take to Prepare for a Spacewalk?” NASA, ed. M. A. Garcia, 2018.",
   "“What Is a Spacewalk? (Grades K-4).” NASA, ed. S. May, 2020."
+];
+
+const GLOSSARY = [
+  {id:"g1", cat:"Hydraulic hardware", term:"Luer-lock", def:"A syringe tip with screw threads, so tubing fittings twist on and stay locked under pressure.", slide:true},
+  {id:"g2", cat:"Hydraulic hardware", term:"Luer-slip", def:"A smooth, tapered syringe tip that fittings simply push onto. Cheaper, but connections can pop off under pressure.", slide:false},
+  {id:"g3", cat:"Hydraulic hardware", term:"Barb adapter", def:"A fitting with ridges (barbs) that grip the inside of flexible tubing, used to connect tubing to a syringe tip.", slide:false},
+  {id:"g4", cat:"Hydraulic hardware", term:"3-way stopcock", def:"A small valve with three ports and a turning lever that can open, close or redirect flow between them.", slide:true},
+  {id:"g5", cat:"Hydraulic hardware", term:"Bleeding air", def:"Pushing trapped air bubbles out of a fluid line. Air squeezes, so bubbles make the system feel spongy and lose travel.", slide:false},
+  {id:"g6", cat:"Hydraulic hardware", term:"Area ratio", def:"The ratio of two plunger areas. Output force changes by this ratio, and output travel changes by its inverse.", slide:true},
+  {id:"g7", cat:"Hydraulic hardware", term:"Line pressure (psi)", def:"How hard the fluid pushes on the inside of the tubing, in pounds per square inch. The project tubing is rated to 90 psi.", slide:false},
+  {id:"g8", cat:"Hydraulic hardware", term:"Seal friction", def:"Drag from a syringe’s rubber plunger seal sliding along the barrel. It uses up some of the force before it reaches the output.", slide:false},
+  {id:"g9", cat:"Hydraulic hardware", term:"Push vs. pull mode", def:"Pushing a plunger raises fluid pressure with no hard limit. Pulling creates suction, which can never exceed about 1 atmosphere (14.7 psi) and lets dissolved air bubble out.", slide:false},
+  {id:"g10", cat:"Mechanisms", term:"Whiffletree (floating pulley)", def:"A balancing linkage that splits one pull among several strings, so each finger can stop at a different point when wrapping around an object.", slide:true},
+  {id:"g11", cat:"Mechanisms", term:"Static balancing", def:"Adding a spring or similar element that cancels another stiffness, so a joint feels close to neutral in every position.", slide:true},
+  {id:"g12", cat:"Mechanisms", term:"Hydraulic lock", def:"Closing a valve so the trapped fluid can’t move, which holds the connected parts in place without continued effort.", slide:false},
+  {id:"g13", cat:"Mechanisms", term:"Tendon (cable) drive", def:"Moving a joint by pulling a string routed along it, the way tendons move fingers. The SSRG uses this approach.", slide:false},
+  {id:"g14", cat:"Prior art", term:"Tenodesis orthosis", def:"A hand splint that uses wrist extension to close the fingers. Used by some people with spinal cord injuries to grasp objects.", slide:true},
+  {id:"g15", cat:"Prior art", term:"Spring-assisted hand orthosis", def:"A rehabilitation brace that uses springs or elastic to help fingers move, usually to help open the hand after a stroke.", slide:false},
+  {id:"g16", cat:"Prior art", term:"Body-powered prosthesis", def:"An artificial hand or hook driven by a cable connected to a harness, so a shoulder movement opens or closes it.", slide:false},
+  {id:"g17", cat:"Materials", term:"Dyneema / Spectra", def:"Brand names for an ultra-strong, very low-stretch fiber, sold as braided fishing line.", slide:false},
+  {id:"g18", cat:"Materials", term:"Kevlar thread", def:"Thread made from a very strong, heat-resistant fiber. Stretches little and resists abrasion.", slide:false},
+  {id:"g19", cat:"Testing", term:"Bench test", def:"Measuring the device directly, for example the force needed to close the glove with a spring scale, instead of measuring a person’s effort.", slide:true},
+  {id:"g20", cat:"Testing", term:"Sham condition", def:"Wearing the device with everything installed but disconnected (strings slack), to separate the effect of the assist from the effect of the hardware itself.", slide:true},
+  {id:"g21", cat:"Testing", term:"Perceived effort scale", def:"A 0–10 rating of how hard a task felt. Simple and quick, but subjective, so it pairs well with measured data.", slide:false}
 ];
 
 /* Approximate inner diameters (mm) of common syringes */
@@ -840,6 +879,7 @@ function contentDefaults(){
     },
     swot:{S:SWOT.S.map((t,i)=>({id:"S"+i,text:t})), W:SWOT.W.map((t,i)=>({id:"W"+i,text:t})), O:SWOT.O.map((t,i)=>({id:"O"+i,text:t})), T:SWOT.T.map((t,i)=>({id:"T"+i,text:t}))},
     sugg:SUGGESTIONS.map(s => Object.assign({}, s)),
+    glossary:GLOSSARY.map(g => Object.assign({done:false}, g)),
     taskText:{}, taskHidden:{}, phaseTitle:{},
     pres:{
       event:"End-of-semester presentation", date:"December 2026",
@@ -860,6 +900,7 @@ function fillContent(c){
   o.swot = Object.assign(contentDefaults().swot, c.swot || {});
   ["S","W","O","T"].forEach(k => { if (!Array.isArray(o.swot[k])) o.swot[k] = []; });
   if (!Array.isArray(o.sugg)) o.sugg = contentDefaults().sugg;
+  if (!Array.isArray(o.glossary)) o.glossary = contentDefaults().glossary;
   ["taskText","taskHidden","phaseTitle"].forEach(k => { if (!o[k] || typeof o[k] !== "object") o[k] = {}; });
   o.pres = Object.assign(contentDefaults().pres, c.pres || {});
   if (!o.pres.hidden || typeof o.pres.hidden !== "object") o.pres.hidden = {};
@@ -957,7 +998,7 @@ function renderHeader(){
 /* ---------- Tabs ---------- */
 const TABS = [
   ["overview","Overview"],["timeline","Timeline"],["materials","Materials"],
-  ["design","Design math"],["testing","Testing"],["swot","SWOT and advice"],["notes","Notes"],["present","Presentation"]
+  ["design","Design math"],["testing","Testing"],["swot","SWOT and advice"],["notes","Notes"],["glossary","Glossary"],["present","Presentation"]
 ];
 function renderTabs(){
   document.getElementById("tabs").innerHTML = TABS.map(([id,label]) =>
@@ -1270,6 +1311,35 @@ function vSwot(){
   </div>`;
 }
 
+function vGlossary(){
+  const g = C().glossary;
+  const done = g.filter(x => x.done).length;
+  const cats = [];
+  g.forEach(x => { const k = x.cat || "Other"; if (!cats.includes(k)) cats.push(k); });
+  const entry = x => editing ? `<div class="gl-item gl-edit">
+      <div class="gl-row"><input type="text" data-edit="gloss:${esc(x.id)}:term" value="${esc(x.term)}" aria-label="Term"><input type="text" data-edit="gloss:${esc(x.id)}:cat" value="${esc(x.cat)}" aria-label="Category"><button class="xbtn" data-del="gloss:${esc(x.id)}">Remove</button></div>
+      <textarea rows="2" data-edit="gloss:${esc(x.id)}:def" aria-label="Definition of ${esc(x.term)}">${esc(x.def)}</textarea>
+    </div>` : `<div class="gl-item ${x.done?"gl-done":""}">
+      <dt>${esc(x.term)}</dt>
+      <dd>${x.def ? esc(x.def) : `<span class="muted">No definition yet.</span>`}</dd>
+      <dd class="gl-flags">
+        <label class="inline small"><input type="checkbox" data-edit="gloss:${esc(x.id)}:done" ${x.done?"checked":""}> Checked and rewritten</label>
+        <label class="inline small"><input type="checkbox" data-edit="gloss:${esc(x.id)}:slide" ${x.slide?"checked":""}> Show on Key terms slide</label>
+      </dd>
+    </div>`;
+  return `<h2>Glossary</h2>
+  <p class="lede">Terms that came up in the review but aren’t in the proposal. The short definitions are a starting point: Cristian should look each one up, check it, and rewrite it in his own words using <strong>Edit content</strong>.</p>
+  ${editHint()}
+  <p class="small muted">${done} of ${g.length} checked and rewritten.</p>
+  ${cats.map(k => `<div class="section"><h3>${esc(k)}</h3><dl class="gl">${g.filter(x => (x.cat || "Other") === k).map(entry).join("")}</dl></div>`).join("")}
+  ${editing ? `<div class="panel section"><h3>Add a term</h3><div class="form">
+    <div><label for="ngTerm">Term</label><input type="text" id="ngTerm"></div>
+    <div><label for="ngCat">Category</label><input type="text" id="ngCat" list="glcats" placeholder="${esc(cats[0] || "Other")}"><datalist id="glcats">${cats.map(k => `<option value="${esc(k)}">`).join("")}</datalist></div>
+    <div class="wide"><label for="ngDef">Definition</label><textarea id="ngDef" rows="2"></textarea></div>
+    <div><button class="btn" data-action="addGloss">Add term</button></div>
+  </div></div>` : ""}`;
+}
+
 /* ---------- Presentation ---------- */
 const bullets = (s, cls) => { const L = lines(s); return L.length ? `<ul class="${cls||""}">${L.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : ""; };
 const slideFoot = (n, total) => `<div class="s-foot"><span>${esc(C().summary.title)}</span><span>${n} / ${total}</span></div>`;
@@ -1337,6 +1407,10 @@ const SLIDES = [
       <div class="s-cols"><div><h3 class="s-h3">Conclusions</h3>${bullets(P.conclusions,"s-list") || `<p class="s-placeholder">Add conclusions once results are in.</p>`}</div>
       <div><h3 class="s-h3">Limitations</h3>${bullets(P.limitations,"s-list")}</div></div>`;
   }},
+  {id:"terms", name:"Key terms", fields:[], build: () => {
+    const t = C().glossary.filter(x => x.slide).slice(0,8);
+    return `<h2 class="s-h2">Key terms</h2>${t.length ? `<dl class="s-terms">${t.map(x => `<div><dt>${esc(x.term)}</dt><dd>${esc(x.def)}</dd></div>`).join("")}</dl>` : `<p class="s-placeholder">Choose terms on the Glossary tab with “Show on Key terms slide.”</p>`}`;
+  }},
   {id:"refs", name:"References", fields:[], build: () => `<h2 class="s-h2">References</h2><ul class="s-refs">${REFS.map(r => `<li>${esc(r)}</li>`).join("")}</ul>`},
   {id:"thanks", name:"Questions", fields:[["thanks","Acknowledgments (one per line)"]], build: () => `
     <div class="s-titlewrap"><div class="s-bar"></div><h1 class="s-h1">Questions?</h1>${lines(C().pres.thanks).length ? `<p class="s-meta">Thank you to</p>${bullets(C().pres.thanks,"s-thanks")}` : ""}</div>`, cls:"s-title"}
@@ -1370,6 +1444,7 @@ function vPresent(){
         ${s.fields.map(([f,label]) => `<div><label>${esc(label)}</label>${f==="event"||f==="date" ? `<input type="text" data-edit="pres:${f}" value="${esc(P[f])}">` : `<textarea rows="3" data-edit="pres:${f}">${esc(P[f])}</textarea>`}</div>`).join("")}
         ${s.id==="problem"||s.id==="goal" ? `<p class="small muted">The project summary on this slide is edited on the Overview tab.</p>` : ""}
         ${s.id==="swot" ? `<p class="small muted">Shows up to four items per box from the SWOT tab.</p>` : ""}
+        ${s.id==="terms" ? `<p class="small muted">Shows up to eight terms marked on the Glossary tab.</p>` : ""}
         <div><label>Speaker notes</label><textarea rows="2" data-edit="note:${s.id}" placeholder="What to say on this slide">${esc(P.notes[s.id] || "")}</textarea></div>
       </div>` : ""}
     </div>`;
@@ -1451,7 +1526,7 @@ function vNotes(){
 /* ---------- Render ---------- */
 function render(){
   renderHeader(); renderTabs();
-  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, present:vPresent};
+  const views = {overview:vOverview, timeline:vTimeline, materials:vMaterials, design:vDesign, testing:vTesting, swot:vSwot, notes:vNotes, glossary:vGlossary, present:vPresent};
   document.getElementById("main").innerHTML = (views[currentTab] || vOverview)();
 }
 function requestRender(){
@@ -1575,6 +1650,7 @@ function applyEdit(s, key, v){
     }
     case "swot": { const it = (c.swot[a] || []).find(x => x.id === b); if (it) it.text = v; break; }
     case "sugg": { const it = c.sugg.find(x => x.id === a); if (it) it[b] = v; break; }
+    case "gloss": { const it = c.glossary.find(x => x.id === a); if (it) it[b] = v; break; }
     case "slideOn": if (v) delete c.pres.hidden[a]; else c.pres.hidden[a] = true; break;
     case "pres": c.pres[a] = v; break;
     case "note": c.pres.notes[a] = v; break;
@@ -1593,6 +1669,8 @@ function applyDelete(s, key){
     else { const o = s.materials.items[a] = s.materials.items[a] || {}; o.hidden = true; }
   } else if (kind === "swot"){
     c.swot[a] = (c.swot[a] || []).filter(x => x.id !== b);
+  } else if (kind === "gloss"){
+    c.glossary = c.glossary.filter(x => x.id !== a);
   } else if (kind === "sugg"){
     c.sugg = c.sugg.filter(x => x.id !== a); delete s.progress.sugg[a];
   }
@@ -1622,6 +1700,10 @@ main.addEventListener("click", e => {
     const text = val("nsText"); if (!text){ document.getElementById("nsText").focus(); return; }
     const item = {id:"s" + uid(), text, why:val("nsWhy"), top:document.getElementById("nsTop").checked};
     mutate(s => s.content.sugg.push(clone(item))); render();
+  } else if (a === "addGloss"){
+    const term = val("ngTerm"); if (!term){ document.getElementById("ngTerm").focus(); return; }
+    const item = {id:"g" + uid(), cat:val("ngCat") || "Other", term, def:val("ngDef"), slide:false, done:false};
+    mutate(s => s.content.glossary.push(clone(item))); render();
   } else if (a === "present"){ openPresenter(); }
   else if (a === "print"){ printDeck(); }
 });
