@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-21T21:09:56.470Z",
+ "updated": "2026-10-21T21:11:39.904Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {},
@@ -11,7 +11,11 @@
   "start": "2026-09-25"
  },
  "materials": {
-  "items": {},
+  "items": {
+   "m8": {
+    "actual": 0
+   }
+  },
   "custom": []
  },
  "logs": {
