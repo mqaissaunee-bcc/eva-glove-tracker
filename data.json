@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-27T06:56:55.125Z",
+ "updated": "2026-10-27T06:57:02.260Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -41,6 +41,9 @@
    },
    "m4": {
     "actual": 7.98
+   },
+   "m5": {
+    "actual": 6.99
    }
   },
   "custom": []
