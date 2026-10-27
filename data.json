@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-27T07:27:41.405Z",
+ "updated": "2026-10-27T21:33:37.774Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -68,7 +68,14 @@
     "actual": 3.99
    }
   },
-  "custom": []
+  "custom": [
+   {
+    "id": "cmvr7d2fhx9rfh",
+    "name": "Springs",
+    "link": "https://www.amazon.com/Neiko-50456A-Assortment-Compression-Extension/dp/B000K7M36W/ref=sr_1_16?crid=5LUNSWWPUD1I&dib=eyJ2IjoiMSJ9.yrL0sdSXfYcSPJZvM8js9_zwzKkpUqNE9GEv_hNPpOcfhIs339WFmNCriJ9Bd6TrWVXqOPwNPNSIGV_15d4IUlkqkVb10SqJ-XdfKi_90z669fe9UCq2a8V0Gy_1x67pTpVODoGExNoT1n15g0U0eEXtmi5L4mZ-YgO-A3WjgMKsz_Bg9zrGC-Hi14X-emqrSYbzb7OMzUGM3_Bqlg9nMlSTGBR91F0rQc5-Dz0O8YQ.RBIqHtei9v1sb94FV-6ga6yzjFLrQB51uqZT0A4M-V0&dib_tag=se&keywords=various%2Bspring%2Bsize&qid=1793136554&sprefix=various%2Bspring%2Bsize%2Caps%2C114&sr=8-16&th=1",
+    "planned": 10
+   }
+  ]
  },
  "logs": {
   "trials": [],
