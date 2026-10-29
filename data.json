@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-10-29T03:09:33.858Z",
+ "updated": "2026-10-29T03:11:17.732Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -35,7 +35,8 @@
    },
    "m2": {
     "actual": 0,
-    "note": "Using Luer instead"
+    "note": "Using Luer instead",
+    "status": "Not needed"
    },
    "m3": {
     "actual": 9.99
