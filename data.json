@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-17T05:30:18.539Z",
+ "updated": "2026-11-17T05:30:33.054Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -166,10 +166,6 @@
     {
      "id": "W3",
      "text": "Rubber band resistance isn’t measured or standardized."
-    },
-    {
-     "id": "W4",
-     "text": "Parts list is missing string, the grip device and fittings; glove cost is off."
     },
     {
      "id": "W5",
