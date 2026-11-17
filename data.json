@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-17T05:29:38.937Z",
+ "updated": "2026-11-17T05:30:18.539Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -162,10 +162,6 @@
     {
      "id": "W1",
      "text": "Pulling on syringes caps force and invites bubbles."
-    },
-    {
-     "id": "W2",
-     "text": "No hypothesis or target to call it a success."
     },
     {
      "id": "W3",
