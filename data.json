@@ -1,6 +1,6 @@
 {
  "version": 1,
- "updated": "2026-11-17T05:21:42.028Z",
+ "updated": "2026-11-17T05:29:38.937Z",
  "updatedBy": "Cristian",
  "progress": {
   "tasks": {
@@ -111,6 +111,13 @@
     "date": "2026-10-27",
     "author": "Cristian",
     "text": "Another idea is by doing a certain movement, like turning arm, a spring releases and closes the valve, leading to hydraulic lock"
+   },
+   {
+    "id": "mwk969p6xm94s",
+    "t": 1794893377434,
+    "date": "2026-11-17",
+    "author": "Cristian",
+    "text": "Hypothesis:\nA passive hydraulic grip-assistance system will reduce the effort required for finger flexion when wearing a restrictive glove. Compared to the restrictive glove without assistance, the glove equipped with the hydraulic system is expected to improve grip performance, increase the number of repetitions completed against a standardized resistance, and reduce perceived effort during repetitive gripping tasks."
    }
   ]
  },
